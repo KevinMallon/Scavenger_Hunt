@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >     
+     
+     <EditText
+        android:id="@+id/textbox_Title"
+        android:layout_width="287dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:hint="Title" /> 
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight=".45"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/pickTimeButton02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/pickDateButton01"
+            android:text="@string/start_time_button" />
+
+        <Button
+            android:id="@+id/pickDateButton01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/pickTimeButton02"
+            android:layout_alignParentTop="true"
+            android:text="@string/start_date_button" />
+
+        <TextView
+            android:id="@+id/tvTime02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/pickTimeButton02"
+            android:layout_alignBottom="@+id/pickTimeButton02"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="22dp"
+            android:text="@string/start_time_text"
+            android:textSize="26px"
+            android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/tvDate01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/pickDateButton01"
+            android:layout_alignBottom="@+id/pickDateButton01"
+            android:layout_alignLeft="@+id/tvTime02"
+            android:text="@string/start_date_text"
+            android:textSize="26px"
+            android:typeface="sans" />
+
+        <Button
+            android:id="@+id/pickEndTimeButton03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/pickEndDateButton04"
+            android:text="@string/end_time_button" />
+                
+        <Button
+            android:id="@+id/pickEndDateButton04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/pickTimeButton02"
+            android:layout_marginTop="16dp"
+            android:text="@string/end_date_button" />
+
+        <TextView
+            android:id="@+id/tvEndTime03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/pickEndTimeButton03"
+            android:layout_alignBottom="@+id/pickEndTimeButton03"
+            android:layout_alignLeft="@+id/tvTime02"
+            android:text="@string/end_time_text"
+            android:textSize="26px"
+            android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/tvEndDate04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/pickEndDateButton04"
+            android:layout_alignBottom="@+id/pickEndDateButton04"
+            android:layout_alignLeft="@+id/tvEndTime03"
+            android:text="@string/end_date_text"
+            android:textSize="26px"
+            android:typeface="sans" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+<!-- 
+    <TextView
+        android:id="@+id/TextView03"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".14"
+        android:background="#ffff00"
+        android:gravity="center"
+        android:text="YELLOW"
+        android:textColor="#000" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/TextView04"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".15"
+        android:background="#0f0"
+        android:gravity="center"
+        android:text="GREEN"
+        android:textColor="#000" >
+    </TextView> -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/createhuntButton_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/label_cancel" />
+
+        <Button
+            android:id="@+id/createhuntButton_CreateHunt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="35dp"
+            android:layout_toRightOf="@+id/createhuntButton_cancel"
+            android:text="@string/create_hunt_button" />
+
+    </RelativeLayout>
+            
+    <TextView
+        android:id="@+id/TextView05"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".12"
+        android:background="#00f"
+        android:gravity="center"
+        android:text="BLUE"
+        android:textColor="#fff" >
+    </TextView>
+
+
+
+</LinearLayout>

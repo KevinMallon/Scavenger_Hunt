@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="15" tools:ignore="OldTargetApi"/>
+        android:targetSdkVersion="15" tools:ignore="OldTargetApi" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -28,6 +28,7 @@
         Parse.com initialization -->
         <activity android:name="LoginActivity" android:label="Login"></activity>
         <activity android:name="MainMenuActivity" android:label="MainMenu"></activity>
-        </application>
+        <activity android:name=".CreateHuntActivity" android:label="CreateHunt"></activity>
+     </application>
 
 </manifest>

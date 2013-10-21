@@ -33,17 +33,26 @@
     <string name="label_signup_in_progress">Sign up in progress for new user</string>
     <string name="label_login_please_wait">Please wait...</string>
     <string name="label_query_in_progress">Searching for user</string>
-   <string name="label_queryErrorMessage">User query error.</string>
+    <string name="label_queryErrorMessage">User query error.</string>
     <string name="label_signupErrorMessage">User signup error.</string>
     <string name="label_loginErrorMessage">Login error:  </string>
     <string name="label_loginPleaseTryAgainMessage">Please try again</string>
     <string name="label_loginUsernameAlreadyExists">Already a user with that username.  Please choose a new username</string>
     <string name="label_loginEmailAlreadyExists">Already a user with that email address.  Please choose a new email</string> 
     <string name="label_selectOption">What would you like to do?</string>
-    <string name="label_newgame">Start a new Game</string>
-    <string name="label_mygames">View My Games</string>
+    <string name="label_newgame">Create a New Hunt</string>
+    <string name="label_mygames">View Hunts</string>
     <string name="label_gamesiamplaying">View Games I am Playing</string>
     <string name="label_joingame">Join a Game</string>
+
+    <string name="start_date_text">Start Date</string>
+    <string name="start_date_button">Set Start Date</string>
+    <string name="start_time_text">Start Time</string>
+    <string name="start_time_button">Set Start Time</string>
+    <string name="end_date_text">End Date</string>
+    <string name="end_date_button">Set End Date</string>
+    <string name="end_time_text">End Time</string>
+    <string name="end_time_button">Set End Time</string>
     
-    
+    <string name="create_hunt_button">Create Hunt</string>    
 </resources>

@@ -27,30 +27,47 @@ public final class R {
         public static final int ic_menu_login=0x7f020003;
         public static final int ic_menu_refresh=0x7f020004;
         public static final int ic_menu_stop=0x7f020005;
-        public static final int splash_logo=0x7f020006;
+        public static final int magn_glass=0x7f020006;
+        public static final int target_icon24=0x7f020007;
+        public static final int target_icon32=0x7f020008;
+        public static final int target_icon48=0x7f020009;
     }
     public static final class id {
-        public static final int SplashLayout=0x7f080008;
-        public static final int action_settings=0x7f08000c;
-        public static final int loginbutton_cancel=0x7f080004;
-        public static final int loginbutton_continue=0x7f080003;
-        public static final int mainMenuButton_joinGame=0x7f080006;
-        public static final int mainMenuButton_myGames=0x7f080007;
-        public static final int mainMenuButton_newGame=0x7f080005;
-        public static final int menuitem_logout=0x7f08000d;
-        public static final int menuitem_prefs=0x7f08000e;
-        public static final int splash_appver_text_view=0x7f08000b;
-        public static final int splash_image_view=0x7f080009;
-        public static final int splash_text_view=0x7f08000a;
-        public static final int textbox_loginEmail=0x7f080002;
-        public static final int textbox_loginPassword=0x7f080001;
-        public static final int textbox_loginUsername=0x7f080000;
+        public static final int LinearLayout1=0x7f080000;
+        public static final int SplashLayout=0x7f080014;
+        public static final int TextView05=0x7f08000c;
+        public static final int action_settings=0x7f080018;
+        public static final int createHunt=0x7f08001b;
+        public static final int createhuntButton_CreateHunt=0x7f08000b;
+        public static final int createhuntButton_cancel=0x7f08000a;
+        public static final int loginbutton_cancel=0x7f080011;
+        public static final int loginbutton_continue=0x7f080010;
+        public static final int mainMenuButton_createHunt=0x7f080012;
+        public static final int mainMenuButton_myGames=0x7f080013;
+        public static final int menuitem_logout=0x7f080019;
+        public static final int menuitem_prefs=0x7f08001a;
+        public static final int pickDateButton01=0x7f080003;
+        public static final int pickEndDateButton04=0x7f080007;
+        public static final int pickEndTimeButton03=0x7f080006;
+        public static final int pickTimeButton02=0x7f080002;
+        public static final int splash_appver_text_view=0x7f080017;
+        public static final int splash_image_view=0x7f080015;
+        public static final int splash_text_view=0x7f080016;
+        public static final int textbox_Title=0x7f080001;
+        public static final int textbox_loginEmail=0x7f08000f;
+        public static final int textbox_loginPassword=0x7f08000e;
+        public static final int textbox_loginUsername=0x7f08000d;
+        public static final int tvDate01=0x7f080005;
+        public static final int tvEndDate04=0x7f080009;
+        public static final int tvEndTime03=0x7f080008;
+        public static final int tvTime02=0x7f080004;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int login=0x7f030001;
-        public static final int mainmenu=0x7f030002;
-        public static final int splash=0x7f030003;
+        public static final int create_hunt=0x7f030001;
+        public static final int login=0x7f030002;
+        public static final int mainmenu=0x7f030003;
+        public static final int splash=0x7f030004;
     }
     public static final class menu {
         public static final int main=0x7f070000;
@@ -60,6 +77,11 @@ public final class R {
         public static final int action_settings=0x7f050002;
         public static final int app_name=0x7f050000;
         public static final int app_version=0x7f050001;
+        public static final int create_hunt_button=0x7f05002a;
+        public static final int end_date_button=0x7f050027;
+        public static final int end_date_text=0x7f050026;
+        public static final int end_time_button=0x7f050029;
+        public static final int end_time_text=0x7f050028;
         public static final int hello=0x7f050003;
         public static final int hint_email=0x7f050012;
         public static final int hint_password=0x7f050010;
@@ -97,6 +119,10 @@ public final class R {
         public static final int option_menu_refresh=0x7f05000a;
         public static final int parse_app_id=0x7f050004;
         public static final int parse_client_id=0x7f050005;
+        public static final int start_date_button=0x7f050023;
+        public static final int start_date_text=0x7f050022;
+        public static final int start_time_button=0x7f050025;
+        public static final int start_time_text=0x7f050024;
     }
     public static final class style {
         /** 
