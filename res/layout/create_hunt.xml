@@ -11,18 +11,29 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:ems="10"
-        android:hint="Title" /> 
+        android:hint="Title" />
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight=".45"
-    android:orientation="vertical" >
+     <Button
+         android:id="@+id/select_players"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:padding="5dip"
+         android:text="Select Players" />
+
+<!--      <ListView  -->
+<!--          android:id="@+id/outputList" -->
+<!--          android:layout_width="fill_parent" -->
+<!--          android:layout_height="fill_parent" /> -->
+     
+<!--      <ExpandableListView -->
+<!--          android:id="@+id/expandableListView1" -->
+<!--          android:layout_width="match_parent" -->
+<!--          android:layout_height="52dp" > -->
+<!--      </ExpandableListView> -->
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="210dp"
         android:gravity="center_horizontal" >
 
         <Button
@@ -105,65 +116,38 @@
 
     </RelativeLayout>
 
-</LinearLayout>
-<!-- 
-    <TextView
-        android:id="@+id/TextView03"
+    <Button
+        android:id="@+id/add_items"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight=".14"
-        android:background="#ffff00"
-        android:gravity="center"
-        android:text="YELLOW"
-        android:textColor="#000" >
-    </TextView>
+        android:padding="5dip"
+        android:text="Add Items" />
 
-    <TextView
-        android:id="@+id/TextView04"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight=".15"
-        android:background="#0f0"
-        android:gravity="center"
-        android:text="GREEN"
-        android:textColor="#000" >
-    </TextView> -->
-
-    <RelativeLayout
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+        android:showDividers="beginning"
+        android:stretchColumns="*" >
 
-        <Button
-            android:id="@+id/createhuntButton_cancel"
+        <TableRow
+            android:id="@+id/tableRow4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/label_cancel" />
+            android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/createhuntButton_CreateHunt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="35dp"
-            android:layout_toRightOf="@+id/createhuntButton_cancel"
-            android:text="@string/create_hunt_button" />
+            <Button
+                android:id="@+id/createhuntButton_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_cancel" />
 
-    </RelativeLayout>
-            
-    <TextView
-        android:id="@+id/TextView05"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight=".12"
-        android:background="#00f"
-        android:gravity="center"
-        android:text="BLUE"
-        android:textColor="#fff" >
-    </TextView>
+            <Button
+                android:id="@+id/createhuntButton_CreateHunt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:text="@string/create_hunt_button" />
+        </TableRow>
 
-
+    </TableLayout>
 
 </LinearLayout>

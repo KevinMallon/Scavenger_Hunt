@@ -27,8 +27,11 @@
         <!-- Login activity is started when the StartActivity is done with
         Parse.com initialization -->
         <activity android:name="LoginActivity" android:label="Login"></activity>
-        <activity android:name="MainMenuActivity" android:label="MainMenu"></activity>
-        <activity android:name=".CreateHuntActivity" android:label="CreateHunt"></activity>
+        <activity android:name="MainMenuActivity" android:label="Main Menu"></activity>
+        <activity android:name=".CreateHuntActivity" android:label="Create Hunt"></activity>
+        <activity android:name=".SingleItemView"></activity>
+        <activity android:name=".PlayersActivity" android:label="Select Players"></activity>
+        <activity android:name=".ItemsActivity" android:label="Add Items"></activity>        
      </application>
 
 </manifest>
