@@ -4,79 +4,141 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-public class PlayersActivity extends Activity implements OnClickListener {
+public class PlayersActivity extends CreateHuntActivity implements
+	OnClickListener {
     ListView listView;
     Button button;
+    ArrayAdapter<String> adapter;
+    List<String> userIDs = new ArrayList<String>();
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.players_activity);
 
-	// ParseQuery<ParseObject> query = ParseQuery.getQuery("GameScore");
-	// query.selectKeys(Arrays.asList("playerName", "score"));;
-	// List<ParseObject> results = query.find();
+	ParseUser currentUser = ParseUser.getCurrentUser();
+	String username = currentUser.getUsername();
+	if (currentUser != null && currentUser.getObjectId() != null) {
+	    final ParseQuery<ParseObject> huntquery = ParseQuery
+		    .getQuery("Hunt");
+	    huntquery.whereEqualTo("owner", username).getFirstInBackground(
+		    new GetCallback<ParseObject>() {
+			public void done(final ParseObject hunt,
+				final ParseException e) {
+			    if (e == null) {
+				String huntID = hunt.getObjectId();
+				Log.d("PlayersActivity", huntID);
+			    } else {
+				Log.d("PlayersActivity",
+					"ParseObject retrieval error: "
+						+ Log.getStackTraceString(e));
+			    }
+			}
+		    });
 
-	// List<ParseQuery<ParseUser>> parseUserQueryList = new
-	// ArrayList<ParseQuery<ParseUser>>();
+	    ParseQuery<ParseUser> parseUsernameQuery = ParseUser.getQuery();
+	    parseUsernameQuery.selectKeys(Arrays.asList("username"));
 
-	ParseQuery<ParseUser> parseUsernameQuery = ParseUser.getQuery();
-	parseUsernameQuery.selectKeys(Arrays.asList("username"));
-	try {
-	    List<ParseUser> usernameListObject = parseUsernameQuery.find();
-	    System.out.println(usernameListObject.size());
-	    List<String> values = new ArrayList<String>();
+	    try {
+		List<ParseUser> usernameListObject = parseUsernameQuery.find();
 
-	    for (ParseObject obj : usernameListObject) {
-		values.add((String) obj.get("username"));
+		List<String> values = new ArrayList<String>();
+
+		for (ParseObject obj : usernameListObject) {
+		    values.add((String) obj.get("username"));
+		}
+		System.out.println(userIDs);
+		listView = (ListView) findViewById(R.id.list);
+		button = (Button) findViewById(R.id.testbutton);
+
+		// Bind array strings into an adapter
+		adapter = new ArrayAdapter<String>(this,
+			android.R.layout.simple_list_item_multiple_choice,
+			values);
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		listView.setAdapter(adapter);
+
+		button.setOnClickListener(this);
+
+	    } catch (ParseException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
 	    }
-	    listView = (ListView) findViewById(R.id.list);
-	    button = (Button) findViewById(R.id.testbutton);
-
-	    // Bind array strings into an adapter
-	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-		    android.R.layout.simple_list_item_multiple_choice, values);
-	    listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-	    listView.setAdapter(adapter);
-
-	    button.setOnClickListener(this);
-	} catch (ParseException e1) {
-	    // TODO Auto-generated catch block
-	    e1.printStackTrace();
 	}
 
     }
 
-    @Override
-    public void onClick(View arg0) {
-	// TODO Auto-generated method stub
+    public void onClick(View v) {
+	SparseBooleanArray checked = listView.getCheckedItemPositions();
+	ArrayList<String> selectedPlayers = new ArrayList<String>();
+	for (int i = 0; i < checked.size(); i++) {
+	    // Item position in adapter
+	    int position = checked.keyAt(i);
+	    // Add if it is checked i.e.) == TRUE!
+	    if (checked.valueAt(i))
+		selectedPlayers.add(adapter.getItem(position));
+	}
 
+	String[] outputStrArr = new String[selectedPlayers.size()];
+	System.out.println(selectedPlayers.size());
+	for (int i = 0; i < selectedPlayers.size(); i++) {
+	    // ParseObject player = new ParseObject("Player");
+	    // player.put("userName", selectedPlayers.get(i));
+	    // player.put("parent", hunt);
+	    // player.saveInBackground();
+	    outputStrArr[i] = selectedPlayers.get(i);
+	}
+
+	// String[] selectedPlayerIDs = new String[selectedPlayers.size()];
+	// for (int i = 0; i < selectedPlayers.size(); i++) {
+	// selectedPlayerIDs[i] = userIDs.get(i);
+	// System.out.println(selectedPlayerIDs);
+	// }
+
+	// doSavePlayers();
+
+	Intent intent = new Intent(PlayersActivity.this,
+		CreateHuntActivity.class);
+
+	// Create a bundle object
+	Bundle b = new Bundle();
+	b.putStringArrayList("selectedPlayers", selectedPlayers);
+
+	// Add the bundle to the intent.
+	intent.putExtras(b);
+
+	// start the CreateHuntActivity
+	startActivity(intent);
     }
+
+    // private void doSavePlayers() {
+    // for (int i = 0; i < selectedPlayers.size(); i++) {
+    // String userName = selectedPlayers.get(i);
+    //
+    // ParseObject player = new ParseObject("Player");
+    // player.put("userName", userIDs);
+    // player.put("parent", hunt);
+
+    // }
+    // }
 }
-// ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(
-// this, "User");
-// adapter.setTextKey("username");
-//
-// ListView listView = (ListView) findViewById(R.id.listview);
-// listView.setAdapter(adapter);
-// }
-// }
-// private static EditText _playerText = null;
-// private static Button _playerAdd = null;
-// private static final ArrayList<String> _playerListContents = new
-// ArrayList<String>();
+
 //
 // _playerListContents.add("Salt");
 // _playerListContents.add("Pepper");

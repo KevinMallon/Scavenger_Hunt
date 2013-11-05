@@ -4,15 +4,17 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    
+
+
     <EditText
         android:id="@+id/item_input"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Add Item" >
+        android:ems="8"
+        android:hint="Add Item" />
+    
 
-        <requestFocus />
-    </EditText>
 
     <EditText
         android:id="@+id/description_input"
@@ -46,10 +48,11 @@
             android:text="Add" />
 
     </RelativeLayout>
-    
+
     <ListView
-        android:id="@+id/item_list"
+        android:id="@+id/listView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" >
+    </ListView>
     
 </LinearLayout>

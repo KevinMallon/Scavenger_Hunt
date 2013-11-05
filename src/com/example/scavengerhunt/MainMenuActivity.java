@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 public class MainMenuActivity extends Activity {
@@ -19,7 +20,10 @@ public class MainMenuActivity extends Activity {
     @SuppressWarnings("unused")
     // This member will be used for actual game play, which is why it's
     // but since no game play code exists yet, it's unused in this activity
-    private ParseUser currentUser;
+    // private ParseUser currentUser;
+    protected ParseObject hunt;
+    ParseUser currentUser = ParseUser.getCurrentUser();
+    String username = currentUser.getUsername();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,12 +46,9 @@ public class MainMenuActivity extends Activity {
 
 	    @Override
 	    public void onClick(View view) {
-		/*
-		 * MainMenuActivity Intent i = new Intent(MainMenuActivity.this,
-		 * CreateHuntActivity.class); startActivity(i); } });
-		 */
 		startActivity(new Intent(MainMenuActivity.this,
 			CreateHuntActivity.class));
+		finish();
 	    }
 	});
 	/*

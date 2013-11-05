@@ -1,32 +1,36 @@
 package com.example.scavengerhunt;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
+import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+//import android.widget.DatePicker;
+//import android.widget.TimePicker;
 
-public class CreateHuntActivity extends Activity {
+public class CreateHuntActivity extends MainMenuActivity {
 
     static final int START_DATE_DIALOG_ID = 1;
     static final int START_TIME_DIALOG_ID = 2;
@@ -35,6 +39,7 @@ public class CreateHuntActivity extends Activity {
     public Button selectPlayersButton;
     public Button addItemsButton;
     private TextView startDateDisplay;
+    private TextView playerNameDisplay;
     public String startDate;
     private Button pickStartDate;
     private TextView endDateDisplay;
@@ -51,9 +56,16 @@ public class CreateHuntActivity extends Activity {
     private EditText titleEditText;
     private String players;
 
+    private static final String TITLE = "Title";
+    private static final int ITEMS_CODE = 1;
+    final int PLAYER_REQUEST_CODE = 1;
+    final int ITEM_REQUEST_CODE = 2;
+
     ListView listview;
     List<ParseObject> ob;
     private String[] myPlayerStringArray;
+    Bundle b;
+    ArrayList<String> itemStrArr;
 
     // ProgressDialog mProgressDialog;
     // ArrayAdapter<String> adapter;
@@ -63,281 +75,221 @@ public class CreateHuntActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.create_hunt);
+	// EditText titleEditText = (EditText) findViewById(R.id.textbox_Title);
+	selectPlayersButton = (Button) findViewById(R.id.select_players);
+	addItemsButton = (Button) findViewById(R.id.add_items);
+
 	setupButtonCallbacks();
 
 	ParseACL defaultACL = new ParseACL();
 	defaultACL.setPublicReadAccess(true);
 	ParseACL.setDefaultACL(defaultACL, true);
 
-	selectPlayersButton = (Button) findViewById(R.id.select_players);
-	addItemsButton = (Button) findViewById(R.id.add_items);
-	startDateDisplay = (TextView) findViewById(R.id.tvDate01);
-	pickStartDate = (Button) findViewById(R.id.pickDateButton01);
+    }
 
-	pickStartDate.setOnClickListener(new OnClickListener() {
+    // public void findHuntID() {
+    // final ParseQuery<ParseObject> huntquery = ParseQuery.getQuery("Hunt");
+    // huntquery.getFirstInBackground(new GetCallback<ParseObject>() {
+    // public void done(final ParseObject hunt, final ParseException e) {
+    // if (e == null) {
+    // String huntID = hunt.getObjectId();
+    // Log.d("CreateHuntActivity", "ParseObject retrieved: "
+    // + huntID);
+    // return;
+    // } else {
+    // Log.d("CreateHuntActivity", "ParseObject retrieval error: "
+    // + Log.getStackTraceString(e));
+    // }
+    // }
+    // });
+    // }
 
-	    @Override
-	    public void onClick(View v) {
-		showDialog(START_DATE_DIALOG_ID);
-	    }
+    private String getHuntId() {
+	return hunt.getObjectId();
+    }
 
-	});
-
-	final Calendar cal1 = Calendar.getInstance();
-	SimpleDateFormat dateFormat = new SimpleDateFormat(
-		"EEE MMM dd hh:mm:ss 'GMT'Z yyyy");
-	System.out.println(dateFormat.format(cal1.getTime()));
-	year = cal1.get(Calendar.YEAR);
-	month = cal1.get(Calendar.MONTH);
-	day = cal1.get(Calendar.DAY_OF_MONTH);
-
-	updateStartDate();
-
-	startTimeDisplay = (TextView) findViewById(R.id.tvTime02);
-	pickStartTime = (Button) findViewById(R.id.pickTimeButton02);
-
-	pickStartTime.setOnClickListener(new OnClickListener() {
-
-	    @Override
-	    public void onClick(View v) {
-		showDialog(START_TIME_DIALOG_ID);
-
-	    }
-
-	});
-
-	hours = cal1.get(Calendar.HOUR);
-	min = cal1.get(Calendar.MINUTE);
-	ampm = cal1.get(Calendar.AM_PM);
-	updateStartTime();
-
-	endDateDisplay = (TextView) findViewById(R.id.tvEndDate04);
-	pickEndDate = (Button) findViewById(R.id.pickEndDateButton04);
-
-	pickEndDate.setOnClickListener(new OnClickListener() {
-
-	    @Override
-	    public void onClick(View v) {
-		showDialog(END_DATE_DIALOG_ID);
-	    }
-
-	});
-
-	final Calendar cal2 = Calendar.getInstance();
-	year = cal2.get(Calendar.YEAR);
-	month = cal2.get(Calendar.MONTH);
-	day = cal2.get(Calendar.DAY_OF_MONTH);
-
-	updateEndDate();
-
-	endTimeDisplay = (TextView) findViewById(R.id.tvEndTime03);
-	pickEndTime = (Button) findViewById(R.id.pickEndTimeButton03);
-
-	pickEndTime.setOnClickListener(new OnClickListener() {
-
-	    @Override
-	    public void onClick(View v) {
-		showDialog(END_TIME_DIALOG_ID);
-
-	    }
-
-	});
-
-	hours = cal2.get(Calendar.HOUR);
-	min = cal2.get(Calendar.MINUTE);
-	ampm = cal2.get(Calendar.AM_PM);
-
-	updateEndTime();
+    @Override
+    public void onResume() {
+	super.onResume();
+	// Bundle b = getIntent().getExtras();
+	// if (b != null) {
+	// String[] playerResultArr = b.getStringArray("selectedPlayers");
+	// ListView lvPlayers = (ListView) findViewById(R.id.playerList);
+	//
+	// ArrayAdapter<String> adapterP = new ArrayAdapter<String>(this,
+	// android.R.layout.simple_list_item_1, playerResultArr);
+	// lvPlayers.setAdapter(adapterP);
+	// }
+	// String[] playerListDisplay = b.getStringArray("selectedPlayers");
+	// players = playerListDisplay.toString();
+	// playerNameDisplay.setText(players);
+	// for (String players : playerListDisplay) {
+	// playername.add((String) players.get("selectedPlayers" + ","));
+	// playerNameDisplay.setText(new
+	// StringBuilder().append(playerListDisplay(i));
+	// for (ParseObject obj : usernameListObject) {
+	// values.add((String) obj.get("username" + ","));
+	// }
+	// }
+	// startTimeDisplay.setText(new
+	// StringBuilder().append(hours).append(':')
+	// .append(min));
 
     }
 
+    // @Override
+    // protected void setTitle() {
+    // titleEditText;
+    // }
+
+    // @Override
+    // public void onPause() {
+    // super.onPause();
+    //
+    // }
+
+    // @Override
+    // protected void onSaveInstanceState(Bundle savedInstanceState) {
+    //
+    // super.onSaveInstanceState(savedInstanceState);
+    // // Store UI state to the savedInstanceState.
+    // // This bundle will be passed to onCreate on next call.
+    // EditText titleEditText = (EditText) findViewById(R.id.textbox_Title);
+    // String strTitle = titleEditText.getText().toString();
+    // savedInstanceState.putString(TITLE, strTitle);
+    //
+    // }
+
+    // @Override
+    // public void onRestoreInstanceState(Bundle savedInstanceState) {
+    // super.onRestoreInstanceState(savedInstanceState);
+    // Restore UI state from the savedInstanceState.
+    // String strTitle = savedInstanceState.getString(TITLE);
+    // setTitle();
+    // }
+
     private void doCreateHunt() {
 	ParseUser currentUser = ParseUser.getCurrentUser();
-	if (currentUser != null && currentUser.getObjectId() != null
-		&& getHuntTitleInput() != "") {
+
+	if (currentUser != null && currentUser.getObjectId() != null) {
 	    final String username = currentUser.getUsername();
 	    /*
 	     * EditText titleEditText = (EditText)
 	     * findViewById(R.id.textbox_Title); titleEditText.setText(title);
 	     */
 	    ParseObject hunt = new ParseObject("Hunt");
-	    hunt.put("title", getHuntTitleInput());
-	    hunt.put("startDate", startDate);
-	    hunt.put("endDate", endDate);
-	    hunt.put("startTime", startTime);
-	    hunt.put("endTime", endTime);
 	    hunt.put("owner", username);
-	    hunt.saveInBackground();
+	    hunt.put("title", getHuntTitleInput());
+	    hunt.put("start_datetime", getStartDateTime());
+	    hunt.put("end_datetime", getEndDateTime());
+	    hunt.put("owner", username);
+	    hunt.saveInBackground(new SaveCallback() {
+		public void done(com.parse.ParseException e) {
+		    if (e == null) {
+			final ParseQuery<ParseObject> huntquery = ParseQuery
+				.getQuery("Hunt");
+			huntquery
+				.getFirstInBackground(new GetCallback<ParseObject>() {
+				    public void done(ParseObject hunt,
+					    com.parse.ParseException e) {
+					if (e == null) {
+					    String huntID = hunt.getObjectId();
+					    Log.d("CreateHuntActivity", huntID);
+					    // savePlayers(huntID);
+					    saveItems(huntID);
+					} else {
+					    Log.d("CreateHuntActivity",
+						    "ParseObject retrieval error: "
+							    + Log.getStackTraceString(e));
+					}
+				    }
+				});
+
+		    } else {
+			Log.d("CreateHuntActivity", "ParseObject save error: "
+				+ Log.getStackTraceString(e));
+		    }
+		}
+	    });
+
 	}
     }
 
-    // private void queryForUser() {
-    // List<ParseQuery<ParseUser>> parseUserQueryList = new
-    // ArrayList<ParseQuery<ParseUser>>();
-    // ParseQuery<ParseUser> parseUsernameQuery = ParseUser.getQuery();
-    // List<ParseUser> usernames = parseUsernameQuery.find();
+    // @Override
+    // public void onActivityResult(int requestCode, int resultCode, Intent
+    // intent) {
+    // super.onActivityResult(requestCode, resultCode, intent);
+    // if (requestCode == ITEMS_CODE && resultCode == RESULT_OK) {
+    // ArrayList<String> itemStrArr = intent
+    // .getStringArrayListExtra("items");
+    // System.out.println("looksgood" + itemStrArr.size());
+    // if (itemStrArr != null) {
+    // // List<String> itemsResults = new ArrayList<String>();
+    // // .getStringArrayList(itemAndDescriptionArray);
+    // System.out.println(itemStrArr.size());
+    // for (int i = 0; i < itemStrArr.size(); i++) {
+    // ParseObject item = new ParseObject("Item");
+    // item.put("itemName", itemStrArr.get(i));
+    // // item.put("huntID", huntID);
+    // item.saveInBackground();
     // }
-    // parseUsernameQuery.findInBackground();
-
-    // ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
-    // query.findInBackground(new FindCallback<>()
-    //
-    //
-    // ParseQuery<User> query = ParseQuery.getQuery(User.class);
-    // query.findInBackground(new FindCallback<>();
-    //
-    // query.selectKeys(Arrays.asList("userName"));
-    // List<ParseUser> usernames = query.find();
-
-    // ArrayAdapter adapter = new ArrayAdapter<String>(this,
-    // android.R.layout.simple_list_item_multiple_choice, myPlayerStringArray);
-    //
-    // ListView listView = (ListView) findViewById(R.id.textView1);
-    // listView.setAdapter(adapter);
-    //
-    // ParseQuery<ParseObject> query = ParseQuery.getQuery("GameScore");
-    // query.selectKeys(userName);
-    // List<ParseObject> results = query.find();
-    //
-    // List<ParseQuery> parseUserQueryList = new ArrayList<ParseQuery>();
-    // final ParseQuery parseUsernameQuery = ParseUser.getQuery();
-    //
-    // protected void showSelectPlayersDialog() {
-    // // List<ParseQuery<ParseUser>> parseUserQueryList = new
-    // ArrayList<ParseQuery<ParseUser>>();
-    // // ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-    // List<ParseQuery> parseUserQueryList = new ArrayList<ParseQuery>();
-    // final ParseQuery parseUsernameQuery = ParseUser.getQuery("username");
-    // String playerName = ParseUser.getString("playerName");
-    // ParseQuery<ParseUser> parseUsernameQuery = ParseUser.getQuery();
-    // Array usernames = parseUsernameQuery.find();
-    // boolean[] checkedPlayers = new boolean[usernames.length];
-    // int count = usernames.length;
-    //
-    // String selectedPlayers;
-    // for(int i = 0; i < count; i++)
-    // checkedPlayers[i] = selectedPlayers.contains(usernames[i]);
-
-    // return builder.create();
     // }
+    //
+    // }
+    // }
+
+    private void savePlayers(String huntID) {
+	Bundle b = getIntent().getExtras();
+	System.out.println(b.size());
+	if (b != null) {
+	    ArrayList<String> playerResults = b
+		    .getStringArrayList("selectedPlayers");
+	    System.out.println(playerResults.size());
+	    for (int i = 0; i < playerResults.size(); i++) {
+		ParseObject player = new ParseObject("Player");
+		player.put("playerName", playerResults.get(i));
+		player.put("huntID", huntID);
+		player.saveInBackground();
+	    }
+	}
+    }
+
+    private void saveItems(String huntID) {
+	Bundle b = getIntent().getExtras();
+	System.out.println(b.size());
+	if (b != null) {
+	    ArrayList<String> itemStrArr = b.getStringArrayList("items");
+	    // if (itemStrArr != null) {
+	    // List<String> itemsResults = new ArrayList<String>();
+	    // .getStringArrayList(itemAndDescriptionArray);
+	    System.out.println(itemStrArr.size());
+	    for (int i = 0; i < itemStrArr.size(); i++) {
+		ParseObject item = new ParseObject("Item");
+		item.put("itemName", itemStrArr.get(i));
+		item.put("huntID", huntID);
+		item.saveInBackground();
+	    }
+	}
+    }
 
     private String getHuntTitleInput() {
 	return getUserInput(R.id.textbox_Title);
     }
 
-    private String getStartDateInput() {
-	return getUserInput(R.id.tvDate01);
+    private Date getStartDateTime() {
+	return convertToDateTime(getUserInput(R.id.editStartDate) + " "
+		+ getUserInput(R.id.editStartTime));
     }
 
-    private String getStartTimeInput() {
-	return getUserInput(R.id.tvTime02);
-    }
-
-    private String getEndDateInput() {
-	return getUserInput(R.id.tvEndDate04);
-    }
-
-    private String getEndTimeInput() {
-	return getUserInput(R.id.tvEndTime03);
+    private Date getEndDateTime() {
+	return convertToDateTime(getUserInput(R.id.editEndDate) + " "
+		+ getUserInput(R.id.editEndTime));
     }
 
     private String getUserInput(int id) {
 	EditText input = (EditText) findViewById(id);
 	return input.getText().toString();
     }
-
-    public void updateStartTime() {
-	startTimeDisplay.setText(new StringBuilder().append(hours).append(':')
-		.append(min));
-	startTime = (new StringBuilder().append(hours).append(':').append(min))
-		.toString();
-
-    }
-
-    public void updateStartDate() {
-	startDateDisplay.setText(new StringBuilder().append(month + 1)
-		.append('-').append(day).append('-').append(year));
-	startDate = (new StringBuilder().append(month + 1).append('-')
-		.append(day).append('-').append(year)).toString();
-
-    }
-
-    private DatePickerDialog.OnDateSetListener StartDateListener = new DatePickerDialog.OnDateSetListener() {
-
-	@Override
-	public void onDateSet(DatePicker view, int yr, int monthOfYear,
-		int dayOfMonth) {
-	    year = yr;
-	    month = monthOfYear;
-	    day = dayOfMonth;
-	    updateStartDate();
-	}
-    };
-
-    private TimePickerDialog.OnTimeSetListener StartTimeListener = new TimePickerDialog.OnTimeSetListener() {
-
-	@Override
-	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-	    hours = hourOfDay;
-	    min = minute;
-	    updateStartTime();
-	}
-
-    };
-
-    protected Dialog onCreateDialog(int id) {
-	switch (id) {
-	case START_DATE_DIALOG_ID:
-	    return new DatePickerDialog(this, StartDateListener, year, month,
-		    day);
-	case START_TIME_DIALOG_ID:
-	    return new TimePickerDialog(this, StartTimeListener, hours, min,
-		    false);
-	case END_DATE_DIALOG_ID:
-	    return new DatePickerDialog(this, endDateListener, year, month, day);
-	case END_TIME_DIALOG_ID:
-	    return new TimePickerDialog(this, endTimeListener, hours, min,
-		    false);
-	}
-	return null;
-    }
-
-    public void updateEndTime() {
-	endTimeDisplay.setText(new StringBuilder().append(hours).append(':')
-		.append(min));
-	endTime = (new StringBuilder().append(hours).append(':').append(min))
-		.toString();
-    }
-
-    public void updateEndDate() {
-	endDateDisplay.setText(new StringBuilder().append(month + 1)
-		.append('-').append(day).append('-').append(year));
-	endDate = (new StringBuilder().append(month + 1).append('-')
-		.append(day).append('-').append(year)).toString();
-    }
-
-    private DatePickerDialog.OnDateSetListener endDateListener = new DatePickerDialog.OnDateSetListener() {
-
-	@Override
-	public void onDateSet(DatePicker view, int yr, int monthOfYear,
-		int dayOfMonth) {
-	    year = yr;
-	    month = monthOfYear;
-	    day = dayOfMonth;
-	    updateEndDate();
-	}
-    };
-
-    private TimePickerDialog.OnTimeSetListener endTimeListener = new TimePickerDialog.OnTimeSetListener() {
-
-	@Override
-	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-	    hours = hourOfDay;
-	    min = minute;
-	    updateEndTime();
-	}
-
-    };
 
     private void setupButtonCallbacks() {
 	findViewById(R.id.select_players).setOnClickListener(
@@ -347,12 +299,16 @@ public class CreateHuntActivity extends Activity {
 				PlayersActivity.class));
 		    }
 		});
+
 	findViewById(R.id.add_items).setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
-		startActivity(new Intent(CreateHuntActivity.this,
-			ItemsActivity.class));
+		Intent i = new Intent(CreateHuntActivity.this,
+			ItemsActivity.class);
+		startActivity(i);
+		// startActivityForResult(i, ITEMS_CODE);
 	    }
 	});
+
 	findViewById(R.id.createhuntButton_CreateHunt).setOnClickListener(
 		new OnClickListener() {
 		    public void onClick(View v) {
@@ -367,6 +323,39 @@ public class CreateHuntActivity extends Activity {
 			finish();
 		    }
 		});
+    }
+
+    private Date convertToDateTime(String dateString) {
+	SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy h:mm a",
+		Locale.US);
+	Date convertedDate = new Date();
+	try {
+	    convertedDate = dateFormat.parse(dateString);
+	} catch (ParseException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return convertedDate;
+    }
+
+    public void showStartDatePickerDialog(View v) {
+	DialogFragment newFragment = new DatePickerFragment();
+	newFragment.show(getFragmentManager(), "startDatePicker");
+    }
+
+    public void showStartTimePickerDialog(View v) {
+	DialogFragment newFragment = new TimePickerFragment();
+	newFragment.show(getFragmentManager(), "startTimePicker");
+    }
+
+    public void showEndDatePickerDialog(View v) {
+	DialogFragment newFragment = new DatePickerFragment();
+	newFragment.show(getFragmentManager(), "endDatePicker");
+    }
+
+    public void showEndTimePickerDialog(View v) {
+	DialogFragment newFragment = new TimePickerFragment();
+	newFragment.show(getFragmentManager(), "endTimePicker");
     }
 
     @Override
