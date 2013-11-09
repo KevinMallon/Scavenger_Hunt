@@ -3,6 +3,7 @@ package com.example.scavengerhunt;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,17 +11,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class MainMenuActivity extends Activity {
     private static final int MY_DATE_DIALOG_ID = 1;
     private Button createHuntButton;
     private Button viewGamesButton;
-    @SuppressWarnings("unused")
-    // This member will be used for actual game play, which is why it's
-    // but since no game play code exists yet, it's unused in this activity
-    // private ParseUser currentUser;
     protected ParseObject hunt;
     ParseUser currentUser = ParseUser.getCurrentUser();
     String username = currentUser.getUsername();
@@ -37,18 +36,42 @@ public class MainMenuActivity extends Activity {
 	currentUser = ParseUser.getCurrentUser();
     }
 
+    private void doCreateHunt() {
+	ParseUser currentUser = ParseUser.getCurrentUser();
+
+	if (currentUser != null && currentUser.getObjectId() != null) {
+	    final String username = currentUser.getUsername();
+	    final ParseObject hunt = new ParseObject("Hunt");
+	    hunt.put("owner", username);
+	    hunt.saveInBackground(new SaveCallback() {
+		public void done(ParseException e) {
+		    if (e == null) {
+			// Saved successfully.
+			String huntID = hunt.getObjectId();
+			Intent i = new Intent(MainMenuActivity.this,
+				CreateHuntActivity.class);
+			i.putExtra("CreateHuntActivity", huntID);
+			startActivity(i);
+		    } else {
+			Log.d("CreateHuntActivity",
+				"ParseObject retrieval error: "
+					+ Log.getStackTraceString(e));
+		    }
+		}
+
+	    });
+
+	}
+    }
+
     /**
      * Setup the Screen callbacks
      */
     private void setupButtonCallbacks() {
 	createHuntButton = (Button) findViewById(R.id.mainMenuButton_createHunt);
 	createHuntButton.setOnClickListener(new View.OnClickListener() {
-
-	    @Override
-	    public void onClick(View view) {
-		startActivity(new Intent(MainMenuActivity.this,
-			CreateHuntActivity.class));
-		finish();
+	    public void onClick(View v) {
+		doCreateHunt();
 	    }
 	});
 	/*

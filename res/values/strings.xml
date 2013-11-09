@@ -52,5 +52,6 @@
     <string name="hint_endDate">End Date</string>
     <string name="hint_endTime">End Time</string>
     
-    <string name="create_hunt_button">Create Hunt</string>    
+    <string name="create_hunt_button">Create Hunt</string> 
+    <string name="update_hunt_button">Update Hunt</string> 
 </resources>
