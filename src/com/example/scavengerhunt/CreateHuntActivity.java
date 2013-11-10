@@ -21,7 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.GetCallback;
@@ -41,19 +41,18 @@ public class CreateHuntActivity extends Activity {
     public String startDate;
     public String startTime;
 
-    private static final String TITLE = "Title";
-    private static final int ITEMS_CODE = 1;
-    final int PLAYER_REQUEST_CODE = 1;
-    final int ITEM_REQUEST_CODE = 2;
-
-    public ListView listView;
-    public List<ParseObject> ob;
-    private String[] myPlayerStringArray;
-    // private Bundle b;
     public ArrayList<String> itemStrArr;
     ArrayAdapter<String> adapter;
+    ArrayAdapter<String> adapter2;
 
-    /** Called when the activity is first created. */
+    final Intent i = getIntent();
+
+    private String getHuntID() {
+	Intent i = getIntent();
+	String huntID = i.getStringExtra("CreateHuntActivity");
+	return huntID;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
@@ -62,12 +61,6 @@ public class CreateHuntActivity extends Activity {
 	addItemsButton = (Button) findViewById(R.id.add_items);
 	createhuntButton_CreateHunt = (Button) findViewById(R.id.createhuntButton_CreateHunt);
 	setupButtonCallbacks();
-    }
-
-    private String getHuntID() {
-	Intent i = getIntent();
-	String huntID = i.getStringExtra("CreateHuntActivity");
-	return huntID;
     }
 
     private void doUpdateHunt() {
@@ -101,29 +94,85 @@ public class CreateHuntActivity extends Activity {
 	});
     }
 
-    private void showItems() throws ParseException, com.parse.ParseException {
-	System.out.println("showing item list");
-	ParseQuery<ParseObject> itemquery = ParseQuery.getQuery("Item");
-	itemquery.whereEqualTo("huntID", getHuntID());
-	itemquery.selectKeys(Arrays.asList("itemName"));
-	List<ParseObject> itemNameListObject = itemquery.find();
-	if (itemNameListObject.size() > 0) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
 
-	    List<String> values = new ArrayList<String>();
-
-	    for (ParseObject obj : itemNameListObject) {
-		values.add((String) obj.get("itemName"));
+	if (requestCode == 100) {
+	    if (resultCode == RESULT_OK) {
+		String huntID = data.getStringExtra("huntID");
+		showItems(huntID);
+		showPlayers(huntID);
+	    } else {
+		// do something else
 	    }
 
-	    listView = (ListView) findViewById(R.id.itemList);
-
-	    // Bind array strings into an adapter
-	    adapter = new ArrayAdapter<String>(this,
-		    android.R.layout.simple_list_item_1, values);
-
-	    listView.setAdapter(adapter);
 	}
+    }
 
+    private void showPlayers(String huntID) {
+	ParseQuery<ParseObject> playerquery = ParseQuery.getQuery("Player");
+	playerquery.whereEqualTo("huntID", huntID);
+	System.out.println("first in showP " + huntID);
+	playerquery.selectKeys(Arrays.asList("playerName"));
+	List<ParseObject> playerNameListObject;
+
+	try {
+	    playerNameListObject = playerquery.find();
+	    if (playerNameListObject.size() > 0) {
+		System.out.println("# of players "
+			+ playerNameListObject.size());
+		int playerCt = playerNameListObject.size();
+		TextView playerCount = (TextView) findViewById(R.id.tv2);
+		playerCount.setText(playerCt + " players selected.");
+		// for (ParseObject obj : playerNameListObject) {
+		// players.add((String) obj.get("playerName"));
+		// }
+		//
+		// ListView listView2 = (ListView) findViewById(R.id.listView2);
+		//
+		// // Bind array strings into an adapter
+		// adapter2 = new ArrayAdapter<String>(this,
+		// android.R.layout.simple_list_item_1, players);
+		//
+		// listView2.setAdapter(adapter2);
+	    }
+
+	} catch (com.parse.ParseException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+    }
+
+    private void showItems(String huntID) {
+	System.out.println("showing item list");
+	ParseQuery<ParseObject> itemquery = ParseQuery.getQuery("Item");
+	itemquery.whereEqualTo("huntID", huntID);
+	itemquery.selectKeys(Arrays.asList("itemName"));
+	List<ParseObject> itemNameListObject;
+	try {
+	    itemNameListObject = itemquery.find();
+	    System.out.println("first in showI " + huntID);
+	    if (itemNameListObject.size() > 0) {
+		int itemCt = itemNameListObject.size();
+		TextView itemCount = (TextView) findViewById(R.id.tv1);
+		itemCount.setText(itemCt + " items added.");
+
+		// for (ParseObject obj : itemNameListObject) {
+		// values.add((String) obj.get("itemName"));
+		// }
+		//
+		// ListView listView1 = (ListView) findViewById(R.id.listView1);
+		//
+		// // Bind array strings into an adapter
+		// adapter = new ArrayAdapter<String>(this,
+		// android.R.layout.simple_list_item_1, values);
+		//
+		// listView1.setAdapter(adapter);
+	    }
+	} catch (com.parse.ParseException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 
     private String getHuntTitleInput() {
@@ -146,22 +195,24 @@ public class CreateHuntActivity extends Activity {
     }
 
     private void setupButtonCallbacks() {
-	// findViewById(R.id.select_players).setOnClickListener(
-	// new OnClickListener() {
-	// public void onClick(View v) {
-	// startActivity(new Intent(CreateHuntActivity.this,
-	// PlayersActivity.class));
-	// }
-	// });
+
+	findViewById(R.id.select_players).setOnClickListener(
+		new OnClickListener() {
+		    public void onClick(View v) {
+			Intent i = new Intent(CreateHuntActivity.this,
+				PlayersActivity.class);
+			i.putExtra("huntID", getHuntID());
+			startActivityForResult(i, 100);
+		    }
+		});
 
 	findViewById(R.id.add_items).setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
-		Intent items = new Intent(CreateHuntActivity.this,
+		Intent i = new Intent(CreateHuntActivity.this,
 			ItemsActivity.class);
-		items.putExtra("HuntID", getHuntID());
-		System.out.println("from call" + getHuntID());
-		startActivity(items);
-		// startActivityForResult(i, ITEMS_CODE);
+		i.putExtra("huntID", getHuntID());
+		System.out.println("switching to pick Items " + getHuntID());
+		startActivityForResult(i, 100);
 	    }
 	});
 
@@ -221,10 +272,6 @@ public class CreateHuntActivity extends Activity {
 	return true;
     }
 
-    /**
-     * The options item selected event listener. Invoked when a menu item has
-     * been selected.
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {

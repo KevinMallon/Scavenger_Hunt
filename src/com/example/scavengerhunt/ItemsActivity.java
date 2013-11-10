@@ -13,7 +13,6 @@ import android.widget.ListView;
 import com.parse.ParseObject;
 
 public class ItemsActivity extends CreateHuntActivity {
-    private static final String TAG = "ItemsActivity";
     private EditText itemNameEditText;
     private EditText descriptionEditText;
     String itemList;
@@ -25,8 +24,7 @@ public class ItemsActivity extends CreateHuntActivity {
 
     private String getHuntID() {
 	Intent i = getIntent();
-	String huntID = i.getStringExtra("HuntID");
-	System.out.println("got in item list " + huntID);
+	String huntID = i.getStringExtra("huntID");
 	return huntID;
     }
 
@@ -46,44 +44,41 @@ public class ItemsActivity extends CreateHuntActivity {
     }
 
     private void setupButtonCallbacks() {
-	findViewById(R.id.finishedButton).setOnClickListener(
-		new OnClickListener() {
-		    public void onClick(View v) {
-			String[] itemStrArr = new String[itemsArray.size()];
-			for (int i = 0; i < itemsArray.size(); i++) {
-			    itemStrArr[i] = itemsArray.get(i);
-			}
-
-			final String huntID = getHuntID();
-			for (int i = 0; i < itemsArray.size(); i++) {
-			    ParseObject item = new ParseObject("Item");
-			    item.put("itemName", itemsArray.get(i));
-			    item.put("huntID", huntID);
-			    item.saveInBackground();
-			}
-
-			finish();
-
-		    }
-		});
 	findViewById(R.id.addButton).setOnClickListener(new OnClickListener() {
-	    public final void onClick(View v) {
+	    public void onClick(View v) {
 		String itemInput = itemNameEditText.getText().toString();
+		String itemDescriptionInput = descriptionEditText.getText()
+			.toString();
 
 		if (null != itemInput && itemInput.length() > 0) {
 
 		    m_listItems.add(itemInput);
-
 		    m_adapter.notifyDataSetChanged();
-
 		    itemDisplay();
+
+		    // for (int i = 0; i < itemsArray.size(); i++) {
+		    ParseObject item = new ParseObject("Item");
+		    item.put("itemName", itemInput);
+		    item.put("itemDescription", itemDescriptionInput);
+		    item.put("huntID", getHuntID());
+		    item.saveInBackground();
+		    // }
 		}
+		itemNameEditText.requestFocus();
 	    }
 	});
-    }
-
-    private String getItemDescriptionInput() {
-	return getUserInput(R.id.description_input);
+	findViewById(R.id.finishedButton).setOnClickListener(
+		new OnClickListener() {
+		    public final void onClick(View v) {
+			Intent intent = new Intent(ItemsActivity.this,
+				CreateHuntActivity.class);
+			intent.putExtra("huntID", getHuntID());
+			System.out.println("sending from Item list "
+				+ getHuntID());
+			setResult(RESULT_OK, intent);
+			finish();
+		    }
+		});
     }
 
     private String getItemNameInput() {
@@ -98,11 +93,8 @@ public class ItemsActivity extends CreateHuntActivity {
     public void itemDisplay() {
 	if (getItemNameInput().length() > 0) {
 	    itemsArray.add(getItemNameInput());
-	    // itemAndDescriptionArray.add(getItemNameInput() + ", " +
-	    // getItemDescriptionInput());
 	    itemNameEditText.setText("");
 	    descriptionEditText.setText("");
-
 	}
     }
 }

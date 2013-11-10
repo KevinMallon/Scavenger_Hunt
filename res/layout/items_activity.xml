@@ -4,17 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    
-
-
     <EditText
         android:id="@+id/item_input"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:ems="8"
         android:hint="Add Item" />
-    
-
 
     <EditText
         android:id="@+id/description_input"
@@ -35,7 +30,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="57dp"
-            android:text="Finished" />
+            android:text="Finished"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/addButton"
@@ -45,7 +41,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="32dp"
             android:onClick="createItem"
-            android:text="Add" />
+            android:text="Add"
+            android:textColor="#FFFFFF" />
 
     </RelativeLayout>
 

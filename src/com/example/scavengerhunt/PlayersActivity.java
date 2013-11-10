@@ -27,7 +27,6 @@ public class PlayersActivity extends CreateHuntActivity implements
     private String getHuntID() {
 	Intent i = getIntent();
 	String huntID = i.getStringExtra("huntID");
-	System.out.println(huntID);
 	return huntID;
     }
 
@@ -83,6 +82,12 @@ public class PlayersActivity extends CreateHuntActivity implements
 	}
 
 	savePlayers(selectedPlayers, getHuntID());
+
+	Intent intent = new Intent(PlayersActivity.this,
+		CreateHuntActivity.class);
+	intent.putExtra("huntID", getHuntID());
+	System.out.println("sending from Player list " + getHuntID());
+	setResult(RESULT_OK, intent);
 	finish();
     }
 

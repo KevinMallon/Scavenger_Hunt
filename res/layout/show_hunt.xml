@@ -12,56 +12,9 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:text="Title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="Players"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-<!--         <fragment
-            android:id="@+id/fragment1"
-            android:name="com.example.android.apis.app.FragmentListArray$ArrayListFragment"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin" /> -->
-
-        <Button
-            android:id="@+id/select_players"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:padding="5dp"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="Choose Players" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/listView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-        </ListView>
-
-    </LinearLayout>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#AB0F2C"
+        android:textSize="28dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -72,55 +25,79 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="Begins: "
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/tvEnd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvStart"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="5dp"
-                android:text="Ends: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/tvEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvStart"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="5dp"
+            android:text="Ends: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/tvStartTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/tvStart"
-                android:layout_alignBottom="@+id/tvStart"
-                android:layout_toRightOf="@+id/tvStart"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/tvStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tvStart"
+            android:layout_alignBottom="@+id/tvStart"
+            android:layout_toRightOf="@+id/tvStart"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                        <TextView
-                            android:id="@+id/tvEndTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/tvEnd"
-                            android:layout_alignBottom="@+id/tvEnd"
-                            android:layout_toRightOf="@+id/tvEnd"
-                            android:textAppearance="?android:attr/textAppearanceSmall" />
-                        
+        <TextView
+            android:id="@+id/tvEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tvEnd"
+            android:layout_alignBottom="@+id/tvEnd"
+            android:layout_toRightOf="@+id/tvEnd"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="Items"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    <ListView
-        android:id="@+id/listView1"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="Players"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+        android:orientation="vertical" >
 
-    </ListView>
+        <ListView
+            android:id="@+id/listView2"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="Items"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+        </ListView>
+    </LinearLayout>
 
 </LinearLayout>

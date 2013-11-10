@@ -17,7 +17,6 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class MainMenuActivity extends Activity {
-    private static final int MY_DATE_DIALOG_ID = 1;
     private Button createHuntButton;
     private Button viewGamesButton;
     protected ParseObject hunt;
@@ -46,7 +45,6 @@ public class MainMenuActivity extends Activity {
 	    hunt.saveInBackground(new SaveCallback() {
 		public void done(ParseException e) {
 		    if (e == null) {
-			// Saved successfully.
 			String huntID = hunt.getObjectId();
 			Intent i = new Intent(MainMenuActivity.this,
 				CreateHuntActivity.class);
@@ -64,9 +62,6 @@ public class MainMenuActivity extends Activity {
 	}
     }
 
-    /**
-     * Setup the Screen callbacks
-     */
     private void setupButtonCallbacks() {
 	createHuntButton = (Button) findViewById(R.id.mainMenuButton_createHunt);
 	createHuntButton.setOnClickListener(new View.OnClickListener() {
@@ -93,17 +88,6 @@ public class MainMenuActivity extends Activity {
 
     }
 
-    // /////////////////////////////////////////////////////
-    // Menu Handler
-    // /////////////////////////////////////////////////////
-
-    /**
-     * The create options menu event listener. Invoked at the time to create the
-     * menu.
-     * 
-     * @param the
-     *            menu to create
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	MenuInflater inflater = getMenuInflater();
@@ -111,10 +95,6 @@ public class MainMenuActivity extends Activity {
 	return true;
     }
 
-    /**
-     * The options item selected event listener. Invoked when a menu item has
-     * been selected.
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {

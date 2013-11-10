@@ -9,6 +9,35 @@ package com.example.scavengerhunt;
 
 public final class R {
     public static final class attr {
+        /**  Drawable used to draw the divider between tabs. 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int divider=0x7f010000;
+        /**  Layout used to organize each tab's content. 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int tabLayout=0x7f010004;
+        /**  Determines whether the strip under the tab indicators is drawn or not. 
+         <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int tabStripEnabled=0x7f010001;
+        /**  Drawable used to draw the left part of the strip underneath the tabs. 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int tabStripLeft=0x7f010002;
+        /**  Drawable used to draw the right part of the strip underneath the tabs. 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int tabStripRight=0x7f010003;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -19,72 +48,116 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f040000;
         public static final int activity_vertical_margin=0x7f040001;
+        public static final int tab_host_default_height=0x7f040002;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int ic_menu_camera=0x7f020001;
-        public static final int ic_menu_friendslist=0x7f020002;
-        public static final int ic_menu_login=0x7f020003;
-        public static final int ic_menu_refresh=0x7f020004;
-        public static final int ic_menu_stop=0x7f020005;
-        public static final int magn_glass=0x7f020006;
-        public static final int target_icon24=0x7f020007;
-        public static final int target_icon32=0x7f020008;
-        public static final int target_icon48=0x7f020009;
+        public static final int activated_background_holo_light=0x7f020000;
+        public static final int btn_check_holo_light=0x7f020001;
+        public static final int btn_check_off_disabled_focused_holo_light=0x7f020002;
+        public static final int btn_check_off_disabled_holo_light=0x7f020003;
+        public static final int btn_check_off_focused_holo_light=0x7f020004;
+        public static final int btn_check_off_holo_light=0x7f020005;
+        public static final int btn_check_off_pressed_holo_light=0x7f020006;
+        public static final int btn_check_on_disabled_focused_holo_light=0x7f020007;
+        public static final int btn_check_on_disabled_holo_light=0x7f020008;
+        public static final int btn_check_on_focused_holo_light=0x7f020009;
+        public static final int btn_check_on_holo_light=0x7f02000a;
+        public static final int btn_check_on_pressed_holo_light=0x7f02000b;
+        public static final int btn_default_disabled_focused_holo_light=0x7f02000c;
+        public static final int btn_default_disabled_holo_light=0x7f02000d;
+        public static final int btn_default_focused_holo_light=0x7f02000e;
+        public static final int btn_default_holo_light=0x7f02000f;
+        public static final int btn_default_normal_holo_light=0x7f020010;
+        public static final int btn_default_pressed_holo_light=0x7f020011;
+        public static final int edit_text_holo_light=0x7f020012;
+        public static final int fastscroll_thumb_default_holo=0x7f020013;
+        public static final int fastscroll_thumb_holo=0x7f020014;
+        public static final int fastscroll_thumb_pressed_holo=0x7f020015;
+        public static final int ic_launcher=0x7f020016;
+        public static final int ic_menu_camera=0x7f020017;
+        public static final int ic_menu_friendslist=0x7f020018;
+        public static final int ic_menu_login=0x7f020019;
+        public static final int ic_menu_refresh=0x7f02001a;
+        public static final int ic_menu_stop=0x7f02001b;
+        public static final int item_background_holo_light=0x7f02001c;
+        public static final int list_activated_holo=0x7f02001d;
+        public static final int list_focused_holo=0x7f02001e;
+        public static final int list_longpressed_holo=0x7f02001f;
+        public static final int list_pressed_holo_light=0x7f020020;
+        public static final int list_selector_background_transition_holo_light=0x7f020021;
+        public static final int list_selector_disabled_holo_light=0x7f020022;
+        public static final int list_selector_holo_light=0x7f020023;
+        public static final int magn_glass=0x7f020024;
+        public static final int tab_indicator_holo=0x7f020025;
+        public static final int tab_selected_focused_holo=0x7f020026;
+        public static final int tab_selected_holo=0x7f020027;
+        public static final int tab_selected_pressed_holo=0x7f020028;
+        public static final int tab_unselected_focused_holo=0x7f020029;
+        public static final int tab_unselected_holo=0x7f02002a;
+        public static final int tab_unselected_pressed_holo=0x7f02002b;
+        public static final int target_icon24=0x7f02002c;
+        public static final int target_icon32=0x7f02002d;
+        public static final int target_icon48=0x7f02002e;
+        public static final int textfield_activated_holo_light=0x7f02002f;
+        public static final int textfield_default_holo_light=0x7f020030;
+        public static final int textfield_disabled_focused_holo_light=0x7f020031;
+        public static final int textfield_disabled_holo_light=0x7f020032;
+        public static final int textfield_focused_holo_light=0x7f020033;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f080000;
-        public static final int SplashLayout=0x7f08002c;
-        public static final int action_settings=0x7f080030;
-        public static final int addButton=0x7f08000f;
+        public static final int SplashLayout=0x7f08002d;
+        public static final int action_settings=0x7f080031;
+        public static final int addButton=0x7f080011;
         public static final int add_items=0x7f080006;
-        public static final int createHunt=0x7f080033;
-        public static final int createhuntButton_CreateHunt=0x7f08000a;
-        public static final int createhuntButton_cancel=0x7f080009;
-        public static final int description_input=0x7f08000d;
+        public static final int createHunt=0x7f080034;
+        public static final int createhuntButton_CreateHunt=0x7f08000c;
+        public static final int createhuntButton_cancel=0x7f08000b;
+        public static final int description_input=0x7f08000f;
         public static final int editEndDate=0x7f080004;
         public static final int editEndTime=0x7f080005;
         public static final int editStartDate=0x7f080002;
         public static final int editStartTime=0x7f080003;
-        public static final int finishedButton=0x7f08000e;
-        public static final int inflate_root=0x7f08001c;
-        public static final int inflate_sub=0x7f08001d;
-        public static final int ingredient_cursor=0x7f08001e;
-        public static final int ingredient_first=0x7f080020;
-        public static final int itemList=0x7f080007;
-        public static final int item_description=0x7f08000b;
-        public static final int item_input=0x7f08000c;
-        public static final int list=0x7f08001a;
-        public static final int listView1=0x7f080010;
-        public static final int listView2=0x7f080024;
-        public static final int listview=0x7f080012;
-        public static final int loginbutton_cancel=0x7f080017;
-        public static final int loginbutton_continue=0x7f080016;
-        public static final int mainMenuButton_createHunt=0x7f080018;
-        public static final int mainMenuButton_myGames=0x7f080019;
-        public static final int menuitem_logout=0x7f080031;
-        public static final int menuitem_prefs=0x7f080032;
-        public static final int name=0x7f08002b;
-        public static final int namelabel=0x7f08002a;
-        public static final int player_first=0x7f08001f;
-        public static final int select_players=0x7f080023;
-        public static final int splash_appver_text_view=0x7f08002f;
-        public static final int splash_image_view=0x7f08002d;
-        public static final int splash_text_view=0x7f08002e;
-        public static final int tableRow4=0x7f080008;
-        public static final int testbutton=0x7f08001b;
-        public static final int text=0x7f080011;
-        public static final int textView1=0x7f080022;
-        public static final int textView3=0x7f080029;
+        public static final int finishedButton=0x7f080010;
+        public static final int inflate_root=0x7f08001e;
+        public static final int inflate_sub=0x7f08001f;
+        public static final int ingredient_cursor=0x7f080020;
+        public static final int ingredient_first=0x7f080022;
+        public static final int item_description=0x7f08000d;
+        public static final int item_input=0x7f08000e;
+        public static final int list=0x7f08001c;
+        public static final int listView1=0x7f080012;
+        public static final int listView2=0x7f080029;
+        public static final int listview=0x7f080014;
+        public static final int loginbutton_cancel=0x7f080019;
+        public static final int loginbutton_continue=0x7f080018;
+        public static final int mainMenuButton_createHunt=0x7f08001a;
+        public static final int mainMenuButton_myGames=0x7f08001b;
+        public static final int menuitem_logout=0x7f080032;
+        public static final int menuitem_prefs=0x7f080033;
+        public static final int name=0x7f08002c;
+        public static final int namelabel=0x7f08002b;
+        public static final int player_first=0x7f080021;
+        public static final int select_players=0x7f080008;
+        public static final int splash_appver_text_view=0x7f080030;
+        public static final int splash_image_view=0x7f08002e;
+        public static final int splash_text_view=0x7f08002f;
+        public static final int tableRow4=0x7f08000a;
+        public static final int testbutton=0x7f08001d;
+        public static final int text=0x7f080013;
+        public static final int textView1=0x7f080028;
+        public static final int textView3=0x7f08002a;
         public static final int textbox_Title=0x7f080001;
-        public static final int textbox_loginEmail=0x7f080015;
-        public static final int textbox_loginPassword=0x7f080014;
-        public static final int textbox_loginUsername=0x7f080013;
-        public static final int tvEnd=0x7f080026;
-        public static final int tvEndTime=0x7f080028;
-        public static final int tvHuntTitle=0x7f080021;
-        public static final int tvStart=0x7f080025;
-        public static final int tvStartTime=0x7f080027;
+        public static final int textbox_loginEmail=0x7f080017;
+        public static final int textbox_loginPassword=0x7f080016;
+        public static final int textbox_loginUsername=0x7f080015;
+        public static final int tv1=0x7f080007;
+        public static final int tv2=0x7f080009;
+        public static final int tvEnd=0x7f080025;
+        public static final int tvEndTime=0x7f080027;
+        public static final int tvHuntTitle=0x7f080023;
+        public static final int tvStart=0x7f080024;
+        public static final int tvStartTime=0x7f080026;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -102,6 +175,7 @@ public final class R {
         public static final int singleplayerview=0x7f03000c;
         public static final int small_list=0x7f03000d;
         public static final int splash=0x7f03000e;
+        public static final int tab_indicator_holo=0x7f03000f;
     }
     public static final class menu {
         public static final int date_time=0x7f070000;
@@ -186,5 +260,104 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;
+        public static final int ButtonAppTheme=0x7f060005;
+        public static final int CheckBoxAppTheme=0x7f060003;
+        public static final int EditTextAppTheme=0x7f060002;
+        public static final int ImageButtonAppTheme=0x7f060006;
+        public static final int ListViewAppTheme=0x7f060009;
+        public static final int ListViewAppTheme_White=0x7f06000a;
+        public static final int SpinnerItemAppTheme=0x7f06000b;
+        public static final int TabAppTheme=0x7f060007;
+        public static final int TabTextAppTheme=0x7f060008;
+        public static final int TabWidgetAppTheme=0x7f06000c;
+        public static final int buttonStyleSmall=0x7f060004;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a TabWidget.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #TabWidget_divider com.example.scavengerhunt:divider}</code></td><td> Drawable used to draw the divider between tabs.</td></tr>
+           <tr><td><code>{@link #TabWidget_tabLayout com.example.scavengerhunt:tabLayout}</code></td><td> Layout used to organize each tab's content.</td></tr>
+           <tr><td><code>{@link #TabWidget_tabStripEnabled com.example.scavengerhunt:tabStripEnabled}</code></td><td> Determines whether the strip under the tab indicators is drawn or not.</td></tr>
+           <tr><td><code>{@link #TabWidget_tabStripLeft com.example.scavengerhunt:tabStripLeft}</code></td><td> Drawable used to draw the left part of the strip underneath the tabs.</td></tr>
+           <tr><td><code>{@link #TabWidget_tabStripRight com.example.scavengerhunt:tabStripRight}</code></td><td> Drawable used to draw the right part of the strip underneath the tabs.</td></tr>
+           </table>
+           @see #TabWidget_divider
+           @see #TabWidget_tabLayout
+           @see #TabWidget_tabStripEnabled
+           @see #TabWidget_tabStripLeft
+           @see #TabWidget_tabStripRight
+         */
+        public static final int[] TabWidget = {
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
+            0x7f010004
+        };
+        /**
+          <p>
+          @attr description
+           Drawable used to draw the divider between tabs. 
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>This is a private symbol.
+          @attr name com.example.scavengerhunt:divider
+        */
+        public static final int TabWidget_divider = 0;
+        /**
+          <p>
+          @attr description
+           Layout used to organize each tab's content. 
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>This is a private symbol.
+          @attr name com.example.scavengerhunt:tabLayout
+        */
+        public static final int TabWidget_tabLayout = 4;
+        /**
+          <p>
+          @attr description
+           Determines whether the strip under the tab indicators is drawn or not. 
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          <p>This is a private symbol.
+          @attr name com.example.scavengerhunt:tabStripEnabled
+        */
+        public static final int TabWidget_tabStripEnabled = 1;
+        /**
+          <p>
+          @attr description
+           Drawable used to draw the left part of the strip underneath the tabs. 
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>This is a private symbol.
+          @attr name com.example.scavengerhunt:tabStripLeft
+        */
+        public static final int TabWidget_tabStripLeft = 2;
+        /**
+          <p>
+          @attr description
+           Drawable used to draw the right part of the strip underneath the tabs. 
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>This is a private symbol.
+          @attr name com.example.scavengerhunt:tabStripRight
+        */
+        public static final int TabWidget_tabStripRight = 3;
+    };
 }

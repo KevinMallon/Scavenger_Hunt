@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="right"
+    android:gravity="bottom"
     android:orientation="vertical"
     android:scrollbarStyle="insideInset"
     android:scrollbars="vertical" >
@@ -16,40 +17,52 @@
         android:ems="10"
         android:hint="Title" />
 
-<!--     <TableLayout -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="wrap_content" > -->
+    <EditText
+        android:id="@+id/editStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/hint_startDate"
+        android:inputType="date"
+        android:onClick="showStartDatePickerDialog" >
 
-<!--         <TableRow -->
-<!--             android:id="@+id/tableRow1" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" > -->
+        <requestFocus />
+    </EditText>
 
-<!--             <Button -->
-<!--                 android:id="@+id/select_players" -->
-<!--                 style="?android:attr/buttonStyleSmall" -->
-<!--                 android:layout_width="65dp" -->
-<!--                 android:layout_height="wrap_content" -->
-<!--                 android:layout_weight="0.50" -->
-<!--                 android:padding="5dip" -->
-<!--                 android:text="Select Players" /> -->
+    <EditText
+        android:id="@+id/editStartTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/hint_startTime"
+        android:inputType="time"
+        android:onClick="showStartTimePickerDialog" />
 
-<!--             <ListView -->
-<!--                 android:id="@+id/playerList" -->
-<!--                 android:layout_width="240dp" -->
-<!--                 android:layout_height="40dp" -->
-<!--                 android:layout_gravity="right" -->
-<!--                 android:paddingLeft="40dp" -->
-<!--                 android:scrollbarStyle="insideInset" > -->
+    <EditText
+        android:id="@+id/editEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/hint_endDate"
+        android:inputType="date"
+        android:onClick="showEndDatePickerDialog" />
 
-<!--             </ListView> -->
-<!--         </TableRow> -->
-<!--     </TableLayout> -->
-
-    <RelativeLayout
-        android:layout_width="244dp"
-        android:layout_height="wrap_content" >
-    </RelativeLayout>
+    <EditText
+        android:id="@+id/editEndTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/hint_endTime"
+        android:inputType="date"
+        android:onClick="showEndTimePickerDialog" />
 
     <!-- <ExpandableListView -->
     <!-- android:id="@+id/expandableListView1" -->
@@ -57,68 +70,60 @@
     <!-- android:layout_height="52dp" > -->
     <!-- </ExpandableListView> -->
 
-    <EditText
-        android:id="@+id/editStartDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_startDate"
-        android:inputType="date"
-        android:onClick="showStartDatePickerDialog"
-        android:focusable="false" />
-
-    <EditText
-        android:id="@+id/editStartTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_startTime"
-        android:inputType="time"
-        android:onClick="showStartTimePickerDialog"
-        android:focusable="false" />
-
-    <EditText
-        android:id="@+id/editEndDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_endDate"
-        android:inputType="date"
-        android:onClick="showEndDatePickerDialog"
-        android:focusable="false"/>
-
-    <EditText
-        android:id="@+id/editEndTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_endTime"
-        android:inputType="date"
-        android:onClick="showEndTimePickerDialog"
-        android:focusable="false"
-         />
-
     <RelativeLayout
         android:layout_width="200dp"
         android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/add_items"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:padding="5dip"
-            android:text="Add Items" />    
-            
-            <ListView
-                android:id="@+id/itemList"
-                android:layout_width="200dp"
-                android:layout_height="42dp"
-                android:layout_marginLeft="120dp"
-                android:paddingLeft="10dp" 
-                android:scrollbarStyle="insideInset" >
-            </ListView>        
+            android:text="Add Items"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="500dp"
+            android:layout_height="42dp"
+            android:layout_toRightOf="@+id/add_items"
+            android:paddingLeft="10dp"
+            android:scrollbarStyle="insideInset" >
+        </TextView>
+
+    <Button
+        android:id="@+id/select_players"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_items"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_weight="0.50"
+        android:padding="5dip"
+        android:text="Select Players"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="380dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/select_players"
+        android:layout_toRightOf="@+id/add_items"
+        android:paddingLeft="10dp"
+        android:scrollbarStyle="insideInset" >
+
+    </TextView>
+
     </RelativeLayout>
     
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:showDividers="beginning"
         android:stretchColumns="*" >
 
@@ -130,17 +135,21 @@
 
             <Button
                 android:id="@+id/createhuntButton_cancel"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="@string/label_cancel" />
+                android:text="@string/label_cancel"
+                android:padding="5dip"                
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/createhuntButton_CreateHunt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35dp"
-                android:text="@string/update_hunt_button" />
+                android:text="@string/update_hunt_button"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
         </TableRow>
     </TableLayout>
 

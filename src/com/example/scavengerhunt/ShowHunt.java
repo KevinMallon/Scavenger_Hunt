@@ -10,8 +10,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -89,8 +87,8 @@ public class ShowHunt extends Activity {
 	    listView = (ListView) findViewById(R.id.listView1);
 
 	    // Bind array strings into an adapter
-	    adapter = new ArrayAdapter<String>(this,
-		    android.R.layout.simple_list_item_1, values);
+	    adapter = new ArrayAdapter<String>(this, R.layout.small_list,
+		    values);
 
 	    listView.setAdapter(adapter);
 
@@ -113,18 +111,18 @@ public class ShowHunt extends Activity {
 	playerquery.whereEqualTo("huntID", getHuntID());
 	playerquery.selectKeys(Arrays.asList("playerName"));
 	try {
-	    List<ParseObject> itemNameListObject = playerquery.find();
+	    List<ParseObject> playerNameListObject = playerquery.find();
 	    List<String> players = new ArrayList<String>();
-	    if (itemNameListObject.size() > 0) {
-		for (ParseObject obj : itemNameListObject) {
+	    if (playerNameListObject.size() > 0) {
+		for (ParseObject obj : playerNameListObject) {
 		    players.add((String) obj.get("playerName"));
 		}
 
 		listView = (ListView) findViewById(R.id.listView2);
 
 		// Bind array strings into an adapter
-		adapter2 = new ArrayAdapter<String>(this,
-			android.R.layout.simple_list_item_1, players);
+		adapter2 = new ArrayAdapter<String>(this, R.layout.small_list,
+			players);
 
 		listView.setAdapter(adapter2);
 	    }
@@ -137,15 +135,15 @@ public class ShowHunt extends Activity {
     }
 
     private void setupButtonCallbacks() {
-	findViewById(R.id.select_players).setOnClickListener(
-		new OnClickListener() {
-		    public void onClick(View v) {
-			Intent i = new Intent(ShowHunt.this,
-				PlayersActivity.class);
-			i.putExtra("huntID", getHuntID());
-			startActivity(i);
-		    }
-		});
+	// findViewById(R.id.select_players).setOnClickListener(
+	// new OnClickListener() {
+	// public void onClick(View v) {
+	// Intent i = new Intent(ShowHunt.this,
+	// PlayersActivity.class);
+	// i.putExtra("huntID", getHuntID());
+	// startActivity(i);
+	// }
+	// });
     }
 
 }
