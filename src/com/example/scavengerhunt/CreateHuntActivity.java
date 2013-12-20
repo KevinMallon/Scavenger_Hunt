@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -13,6 +12,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,10 +24,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class CreateHuntActivity extends Activity {
 
@@ -45,8 +47,6 @@ public class CreateHuntActivity extends Activity {
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter2;
 
-    final Intent i = getIntent();
-
     private String getHuntID() {
 	Intent i = getIntent();
 	String huntID = i.getStringExtra("CreateHuntActivity");
@@ -57,33 +57,34 @@ public class CreateHuntActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.create_hunt);
-	// selectPlayersButton = (Button) findViewById(R.id.select_players);
-	addItemsButton = (Button) findViewById(R.id.add_items);
-	createhuntButton_CreateHunt = (Button) findViewById(R.id.createhuntButton_CreateHunt);
 	setupButtonCallbacks();
     }
 
-    private void doUpdateHunt() {
-	System.out.println("starting update");
+    private void doCompleteHunt() {
 	final ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
-	final Intent i = getIntent();
-	String huntID = i.getStringExtra("CreateHuntActivity");
-	System.out.println(huntID);
 	final Context context = this;
-	query.getInBackground(huntID, new GetCallback<ParseObject>() {
+	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
+	    @Override
 	    public void done(ParseObject hunt, com.parse.ParseException e) {
-		System.out.println(hunt);
 		if (e == null) {
 		    hunt.put("title", getHuntTitleInput());
 		    hunt.put("start_datetime", getStartDateTime());
 		    hunt.put("end_datetime", getEndDateTime());
-		    hunt.saveInBackground();
-		    Intent showhunt = new Intent(CreateHuntActivity.this,
-			    ShowHunt.class);
-		    showhunt.putExtra("HuntID", getHuntID());
-		    System.out.println("from call on update hunt "
-			    + getHuntID());
-		    startActivity(showhunt);
+		    hunt.saveInBackground(new SaveCallback() {
+			@Override
+			public void done(com.parse.ParseException arg0) {
+			    if (arg0 == null) {
+
+				Intent showhunt = new Intent(
+					CreateHuntActivity.this, ShowHunt.class);
+				showhunt.putExtra("HuntID", getHuntID());
+				startActivity(showhunt);
+			    } else {
+				Log.i("ScavengerHuntActivity",
+					"game title that is inputted " + arg0);
+			    }
+			}
+		    });
 		} else {
 		    CharSequence text = "Sorry, the hunt was not updated.";
 		    int duration = Toast.LENGTH_SHORT;
@@ -94,85 +95,33 @@ public class CreateHuntActivity extends Activity {
 	});
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	super.onActivityResult(requestCode, resultCode, data);
-
 	if (requestCode == 100) {
-	    if (resultCode == RESULT_OK) {
-		String huntID = data.getStringExtra("huntID");
-		showItems(huntID);
-		showPlayers(huntID);
-	    } else {
-		// do something else
+	    if (resultCode == 1) {
+		Bundle bundle = data.getExtras();
+		String[] items = (String[]) bundle.getSerializable("items");
+		showItems(items);
 	    }
-
+	    if (resultCode == 2) {
+		Bundle bundle = data.getExtras();
+		String[] selectedPlayers = (String[]) bundle
+			.getSerializable("players");
+		showPlayers(selectedPlayers);
+	    }
 	}
     }
 
-    private void showPlayers(String huntID) {
-	ParseQuery<ParseObject> playerquery = ParseQuery.getQuery("Player");
-	playerquery.whereEqualTo("huntID", huntID);
-	System.out.println("first in showP " + huntID);
-	playerquery.selectKeys(Arrays.asList("playerName"));
-	List<ParseObject> playerNameListObject;
-
-	try {
-	    playerNameListObject = playerquery.find();
-	    if (playerNameListObject.size() > 0) {
-		System.out.println("# of players "
-			+ playerNameListObject.size());
-		int playerCt = playerNameListObject.size();
-		TextView playerCount = (TextView) findViewById(R.id.tv2);
-		playerCount.setText(playerCt + " players selected.");
-		// for (ParseObject obj : playerNameListObject) {
-		// players.add((String) obj.get("playerName"));
-		// }
-		//
-		// ListView listView2 = (ListView) findViewById(R.id.listView2);
-		//
-		// // Bind array strings into an adapter
-		// adapter2 = new ArrayAdapter<String>(this,
-		// android.R.layout.simple_list_item_1, players);
-		//
-		// listView2.setAdapter(adapter2);
-	    }
-
-	} catch (com.parse.ParseException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+    private void showPlayers(String[] selectedPlayers) {
+	TextView players = (TextView) findViewById(R.id.tv2);
+	players.setText(Arrays.toString(selectedPlayers).replaceAll("\\[|\\]",
+		""));
     }
 
-    private void showItems(String huntID) {
-	System.out.println("showing item list");
-	ParseQuery<ParseObject> itemquery = ParseQuery.getQuery("Item");
-	itemquery.whereEqualTo("huntID", huntID);
-	itemquery.selectKeys(Arrays.asList("itemName"));
-	List<ParseObject> itemNameListObject;
-	try {
-	    itemNameListObject = itemquery.find();
-	    System.out.println("first in showI " + huntID);
-	    if (itemNameListObject.size() > 0) {
-		int itemCt = itemNameListObject.size();
-		TextView itemCount = (TextView) findViewById(R.id.tv1);
-		itemCount.setText(itemCt + " items added.");
-
-		// for (ParseObject obj : itemNameListObject) {
-		// values.add((String) obj.get("itemName"));
-		// }
-		//
-		// ListView listView1 = (ListView) findViewById(R.id.listView1);
-		//
-		// // Bind array strings into an adapter
-		// adapter = new ArrayAdapter<String>(this,
-		// android.R.layout.simple_list_item_1, values);
-		//
-		// listView1.setAdapter(adapter);
-	    }
-	} catch (com.parse.ParseException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+    private void showItems(String[] items) {
+	TextView players = (TextView) findViewById(R.id.tv1);
+	players.setText(Arrays.toString(items).replaceAll("\\[|\\]", ""));
     }
 
     private String getHuntTitleInput() {
@@ -189,8 +138,17 @@ public class CreateHuntActivity extends Activity {
 		+ getUserInput(R.id.editEndTime));
     }
 
+    private String getPlayersInput() {
+	return getContents(R.id.tv2);
+    }
+
     private String getUserInput(int id) {
 	EditText input = (EditText) findViewById(id);
+	return input.getText().toString();
+    }
+
+    private String getContents(int id) {
+	TextView input = (TextView) findViewById(id);
 	return input.getText().toString();
     }
 
@@ -198,6 +156,7 @@ public class CreateHuntActivity extends Activity {
 
 	findViewById(R.id.select_players).setOnClickListener(
 		new OnClickListener() {
+		    @Override
 		    public void onClick(View v) {
 			Intent i = new Intent(CreateHuntActivity.this,
 				PlayersActivity.class);
@@ -207,27 +166,51 @@ public class CreateHuntActivity extends Activity {
 		});
 
 	findViewById(R.id.add_items).setOnClickListener(new OnClickListener() {
+	    @Override
 	    public void onClick(View v) {
 		Intent i = new Intent(CreateHuntActivity.this,
-			ItemsActivity.class);
+			AddItemsActivity.class);
 		i.putExtra("huntID", getHuntID());
-		System.out.println("switching to pick Items " + getHuntID());
+		i.putExtra("from", "create");
 		startActivityForResult(i, 100);
 	    }
 	});
 
-	findViewById(R.id.createhuntButton_CreateHunt).setOnClickListener(
+	findViewById(R.id.createHuntButton).setOnClickListener(
 		new OnClickListener() {
+		    @Override
 		    public void onClick(View v) {
-			doUpdateHunt();
+			doCompleteHunt();
 		    }
 		});
 
-	findViewById(R.id.createhuntButton_cancel).setOnClickListener(
+	findViewById(R.id.cancelHuntButton).setOnClickListener(
 		new OnClickListener() {
+		    @Override
 		    public final void onClick(View v) {
-			ParseUser.logOut();
-			finish();
+			ParseQuery<ParseObject> huntquery = ParseQuery
+				.getQuery("Hunt");
+			huntquery.whereEqualTo("huntID", getHuntID());
+
+			huntquery.getInBackground(getHuntID(),
+				new GetCallback<ParseObject>() {
+				    @Override
+				    public void done(ParseObject hunt,
+					    com.parse.ParseException e) {
+					if (e == null) {
+					    hunt.deleteInBackground(new DeleteCallback() {
+						@Override
+						public void done(
+							com.parse.ParseException e) {
+						    if (e == null) {
+
+						    }
+						}
+					    });
+					    finish();
+					}
+				    }
+				});
 		    }
 		});
     }
@@ -239,7 +222,6 @@ public class CreateHuntActivity extends Activity {
 	try {
 	    convertedDate = dateFormat.parse(dateString);
 	} catch (ParseException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 	return convertedDate;
@@ -276,8 +258,6 @@ public class CreateHuntActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {
 	case R.id.menuitem_prefs:
-	    // Intent i = new Intent(mThisActivity, PrefsActivity.class);
-	    // mThisActivity.startActivity(i);
 	    return true;
 	case R.id.menuitem_logout:
 	    ParseUser.logOut();

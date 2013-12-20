@@ -19,20 +19,12 @@ import com.parse.SaveCallback;
 public class MainMenuActivity extends Activity {
     private Button createHuntButton;
     private Button viewGamesButton;
-    protected ParseObject hunt;
-    ParseUser currentUser = ParseUser.getCurrentUser();
-    String username = currentUser.getUsername();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.mainmenu);
 	setupButtonCallbacks();
-    }
-
-    public void onResume() {
-	super.onResume();
-	currentUser = ParseUser.getCurrentUser();
     }
 
     private void doCreateHunt() {
@@ -43,6 +35,7 @@ public class MainMenuActivity extends Activity {
 	    final ParseObject hunt = new ParseObject("Hunt");
 	    hunt.put("owner", username);
 	    hunt.saveInBackground(new SaveCallback() {
+		@Override
 		public void done(ParseException e) {
 		    if (e == null) {
 			String huntID = hunt.getObjectId();
@@ -65,6 +58,7 @@ public class MainMenuActivity extends Activity {
     private void setupButtonCallbacks() {
 	createHuntButton = (Button) findViewById(R.id.mainMenuButton_createHunt);
 	createHuntButton.setOnClickListener(new View.OnClickListener() {
+	    @Override
 	    public void onClick(View v) {
 		doCreateHunt();
 	    }
@@ -79,10 +73,15 @@ public class MainMenuActivity extends Activity {
 
 	viewGamesButton = (Button) findViewById(R.id.mainMenuButton_myGames);
 	viewGamesButton.setOnClickListener(new OnClickListener() {
+	    @Override
 	    public void onClick(View v) {
 		// XXX open MyGamesActivity
 		// Intent i = new Intent(mThisActivity, MyGamesActivity.class);
 		// mThisActivity.startActivity(i);
+		Intent i = new Intent(MainMenuActivity.this,
+			AllHuntsActivity.class);
+		startActivity(i);
+
 	    }
 	});
 

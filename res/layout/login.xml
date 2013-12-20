@@ -8,7 +8,6 @@
     android:layout_margin="10dp"
     android:orientation="vertical"
     tools:context=".activity.LoginActivity" >
-
     
     <TextView
         android:layout_width="wrap_content"
@@ -65,26 +64,21 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/loginbutton_continue"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/label_continue"
-            android:textSize="16sp"
-            android:textStyle="normal" />
-
-        <Button
             android:id="@+id/loginbutton_cancel"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="10dp"
+            android:layout_width="65dp"
             android:text="@string/label_cancel"
-            android:textSize="16sp"
-            android:textStyle="normal" />
+            android:padding="5dip"                
+            android:textColor="#FFFFFF" />
+                
+        <Button
+            android:id="@+id/loginbutton_continue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:text="@string/label_continue"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
     </LinearLayout>
 

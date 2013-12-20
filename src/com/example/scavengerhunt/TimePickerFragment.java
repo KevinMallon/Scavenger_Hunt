@@ -27,6 +27,7 @@ public class TimePickerFragment extends DialogFragment implements
 		DateFormat.is24HourFormat(getActivity()));
     }
 
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 	Calendar mCalendar = Calendar.getInstance();
 	mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);

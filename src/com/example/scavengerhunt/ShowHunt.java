@@ -10,21 +10,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class ShowHunt extends Activity {
+    protected static final String ShowHunt = null;
+    protected static final int VISIBLE = 0;
+    protected static final int GONE = 0;
     ListView listView;
-    Button button;
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter2;
+    ParseUser currentUser = ParseUser.getCurrentUser();
+    Button editHuntButton;
 
     private String getHuntID() {
 	Intent showhunt = getIntent();
@@ -39,107 +46,131 @@ public class ShowHunt extends Activity {
 	final TextView tvHuntTitle = (TextView) findViewById(R.id.tvHuntTitle);
 	final TextView tvStartTime = (TextView) findViewById(R.id.tvStartTime);
 	final TextView tvEndTime = (TextView) findViewById(R.id.tvEndTime);
+	final String huntID = getHuntID();
+	System.out.println("Show huntID " + huntID);
+	ParseQuery<ParseObject> huntquery = ParseQuery.getQuery("Hunt");
+	huntquery.whereEqualTo("objectId", huntID);
 
-	final ParseQuery<ParseObject> huntquery = ParseQuery.getQuery("Hunt");
-	huntquery.whereEqualTo("objectId", getHuntID());
-	huntquery.findInBackground(new FindCallback<ParseObject>() {
-	    public void done(List<ParseObject> object, ParseException e) {
+	huntquery.getInBackground(huntID, new GetCallback<ParseObject>() {
+	    @Override
+	    public void done(ParseObject object, ParseException e) {
 		if (e == null) {
-		    Log.d("ShowHunt", "got it");
-		    List<String> title = new ArrayList<String>();
-		    List<String> startTime = new ArrayList<String>();
-		    List<String> endTime = new ArrayList<String>();
-		    Format formatter = new SimpleDateFormat("MM-dd-yy HH:mm");
-		    for (ParseObject huntObject : object) {
-			huntObject.get("title");
-			title.add((String) huntObject.get("title"));
-			startTime.add((String) formatter.format(huntObject
-				.get("start_datetime")));
-			endTime.add((String) formatter.format(huntObject
-				.get("end_datetime")));
+		    String title = new String();
+		    String owner = new String();
+		    String startTime = new String();
+		    String endTime = new String();
+		    Format formatter = new SimpleDateFormat("MM-dd-yy, h:mm a");
+
+		    title = (String) object.get("title");
+		    startTime = formatter.format(object
+			    .get("start_datetime"));
+		    endTime = formatter.format(object
+			    .get("end_datetime"));
+
+		    owner = (String) object.get("owner");
+		    final String username = currentUser.getUsername();
+		    System.out.println("current user " + username);
+		    System.out.println("owner " + owner);
+
+		    if (owner == username) {
+			setButtonVisibility();
 		    }
 
-		    String endTimeString = endTime.get(0);
-		    String startTimeString = startTime.get(0);
-		    tvHuntTitle.setText(title.get(0));
-		    tvStartTime.setText(startTimeString);
-		    tvEndTime.setText(endTimeString);
+		    tvHuntTitle.setText(title);
+		    tvStartTime.setText(startTime);
+		    tvEndTime.setText(endTime);
+
 		} else {
 		    Log.d("ShowHunt",
 			    "ParseObject retrieval error: "
 				    + Log.getStackTraceString(e));
 		}
+
+	    }
+
+	});
+	getItems();
+	getPlayers();
+	setupButtonCallbacks();
+    }
+
+    private void getItems() {
+	ParseQuery<ParseObject> query = ParseQuery.getQuery("HuntItem");
+	query.whereEqualTo("huntId", getHuntID());
+	query.selectKeys(Arrays.asList("itemName"));
+	query.findInBackground(new FindCallback<ParseObject>() {
+	    @Override
+	    public void done(List<ParseObject> objects, ParseException e) {
+		if (e == null) {
+		    List<String> items = new ArrayList<String>();
+		    for (ParseObject obj : objects) {
+			items.add((String) obj.get("itemName"));
+		    }
+		    setItemList(items);
+		}
 	    }
 	});
+    }
 
-	ParseQuery<ParseObject> query = ParseQuery.getQuery("Item");
-	query.whereEqualTo("huntID", getHuntID());
-	query.selectKeys(Arrays.asList("itemName"));
-	try {
-	    List<ParseObject> itemNameListObject = query.find();
-
-	    List<String> values = new ArrayList<String>();
-
-	    for (ParseObject obj : itemNameListObject) {
-		values.add((String) obj.get("itemName"));
+    private void getPlayers() {
+	ParseQuery<ParseObject> playerquery = ParseQuery.getQuery("HuntPlayer");
+	playerquery.whereEqualTo("huntId", getHuntID());
+	playerquery.selectKeys(Arrays.asList("userName"));
+	playerquery.findInBackground(new FindCallback<ParseObject>() {
+	    @Override
+	    public void done(List<ParseObject> objects, ParseException e) {
+		System.out.println(" # players " + objects.size());
+		if (e == null) {
+		    List<String> players = new ArrayList<String>();
+		    for (ParseObject obj : objects) {
+			players.add((String) obj.get("userName"));
+		    }
+		    System.out.println(" # players " + players);
+		    setPlayerList(players);
+		}
 	    }
+	});
+    }
 
-	    listView = (ListView) findViewById(R.id.listView1);
+    private void setItemList(List<String> items) {
+	listView = (ListView) findViewById(R.id.listView1);
+	adapter = new ArrayAdapter<String>(ShowHunt.this, R.layout.small_list,
+		items);
+	listView.setAdapter(adapter);
+    }
 
-	    // Bind array strings into an adapter
-	    adapter = new ArrayAdapter<String>(this, R.layout.small_list,
-		    values);
-
-	    listView.setAdapter(adapter);
-
-	} catch (ParseException e1) {
-	    // TODO Auto-generated catch block
-	    e1.printStackTrace();
-	}
-	setupButtonCallbacks();
+    private void setPlayerList(List<String> playerList) {
+	listView = (ListView) findViewById(R.id.listView2);
+	adapter2 = new ArrayAdapter<String>(ShowHunt.this, R.layout.small_list,
+		playerList);
+	listView.setAdapter(adapter2);
     }
 
     @Override
     public void onResume() {
 	super.onResume();
-	this.showPlayers();
     }
 
-    private void showPlayers() {
-
-	ParseQuery<ParseObject> playerquery = ParseQuery.getQuery("Player");
-	playerquery.whereEqualTo("huntID", getHuntID());
-	playerquery.selectKeys(Arrays.asList("playerName"));
-	try {
-	    List<ParseObject> playerNameListObject = playerquery.find();
-	    List<String> players = new ArrayList<String>();
-	    if (playerNameListObject.size() > 0) {
-		for (ParseObject obj : playerNameListObject) {
-		    players.add((String) obj.get("playerName"));
-		}
-
-		listView = (ListView) findViewById(R.id.listView2);
-
-		// Bind array strings into an adapter
-		adapter2 = new ArrayAdapter<String>(this, R.layout.small_list,
-			players);
-
-		listView.setAdapter(adapter2);
-	    }
-
-	} catch (ParseException e1) {
-	    // TODO Auto-generated catch block
-	    e1.printStackTrace();
-	}
-	setupButtonCallbacks();
+    private void setButtonVisibility() {
+	editHuntButton.setVisibility(View.GONE);
     }
 
     private void setupButtonCallbacks() {
-	// findViewById(R.id.select_players).setOnClickListener(
+	editHuntButton = (Button) findViewById(R.id.edit_hunt);
+	editHuntButton.setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+		Intent i = new Intent(ShowHunt.this, UpdateHuntActivity.class);
+		i.putExtra("UpdateHuntActivity", getHuntID());
+		startActivity(i);
+	    }
+	});
+
+	// findViewById(R.id.edit_hunt).setOnClickListener(
 	// new OnClickListener() {
 	// public void onClick(View v) {
 	// Intent i = new Intent(ShowHunt.this,
-	// PlayersActivity.class);
+	// CreateHuntActivity.class);
 	// i.putExtra("huntID", getHuntID());
 	// startActivity(i);
 	// }

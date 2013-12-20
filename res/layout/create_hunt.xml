@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="Create Hunt"
     android:id="@+id/LinearLayout1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="right"
     android:gravity="bottom"
     android:orientation="vertical"
+    android:padding="2dp"
     android:scrollbarStyle="insideInset"
     android:scrollbars="vertical" >
-
+        
     <EditText
         android:id="@+id/textbox_Title"
         android:layout_width="287dp"
@@ -64,16 +66,11 @@
         android:inputType="date"
         android:onClick="showEndTimePickerDialog" />
 
-    <!-- <ExpandableListView -->
-    <!-- android:id="@+id/expandableListView1" -->
-    <!-- android:layout_width="match_parent" -->
-    <!-- android:layout_height="52dp" > -->
-    <!-- </ExpandableListView> -->
-
     <RelativeLayout
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" >
-
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp" >
+            
         <Button
             android:id="@+id/add_items"
             android:layout_width="60dp"
@@ -88,10 +85,13 @@
         <TextView
             android:id="@+id/tv1"
             android:layout_width="500dp"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/add_items"
             android:layout_toRightOf="@+id/add_items"
+            android:padding="10dp"
             android:paddingLeft="10dp"
             android:scrollbarStyle="insideInset" >
+
         </TextView>
 
     <Button
@@ -110,13 +110,12 @@
     <TextView
         android:id="@+id/tv2"
         android:layout_width="380dp"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/select_players"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/select_players"
         android:layout_toRightOf="@+id/add_items"
+        android:padding="10dp"
         android:paddingLeft="10dp"
-        android:scrollbarStyle="insideInset" >
-
-    </TextView>
+        android:scrollbarStyle="insideInset" />
 
     </RelativeLayout>
     
@@ -128,25 +127,30 @@
         android:stretchColumns="*" >
 
         <TableRow
+            android:layout_marginTop="25dp"            
             android:id="@+id/tableRow4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="5dp" >
 
             <Button
-                android:id="@+id/createhuntButton_cancel"
-                android:layout_width="60dp"
+                android:id="@+id/cancelHuntButton"
+                android:layout_width="20dp"
                 android:layout_height="wrap_content"
+                android:minHeight="40dip"
+                android:padding="2dp"
                 android:text="@string/label_cancel"
-                android:padding="5dip"                
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="14dp"
+                android:textStyle="normal" />
 
             <Button
-                android:id="@+id/createhuntButton_CreateHunt"
+                android:id="@+id/createHuntButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35dp"
-                android:text="@string/update_hunt_button"
+                android:padding="1dip"                 
+                android:text="@string/create_hunt_button"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 

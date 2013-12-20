@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.parse.FindCallback;
@@ -22,13 +21,9 @@ import com.parse.SignUpCallback;
 
 public class LoginActivity extends Activity {
     private static final String TAG = "LoginActivity";
-    private Button continueButton;
-    private Button cancelButton;
     private EditText usernameEditText;
-    private EditText passwordEditText;
     private EditText emailEditText;
     private String username;
-    private String password;
     private String email;
 
     private ProgressDialog progressDialog;
@@ -84,6 +79,7 @@ public class LoginActivity extends Activity {
     private void setupButtonCallbacks() {
 	findViewById(R.id.loginbutton_continue).setOnClickListener(
 		new OnClickListener() {
+		    @Override
 		    public void onClick(View v) {
 			if (isValidLoginData()) {
 			    queryForUser();
@@ -93,6 +89,7 @@ public class LoginActivity extends Activity {
 		});
 	findViewById(R.id.loginbutton_cancel).setOnClickListener(
 		new OnClickListener() {
+		    @Override
 		    public final void onClick(View v) {
 			ParseUser.logOut();
 			finish();
@@ -215,7 +212,7 @@ public class LoginActivity extends Activity {
 	    dismissProgressDialog();
 	    if (arg1 == null) {
 		if (arg0 != null && arg0.size() > 0) {
-		    ParseUser user = (ParseUser) arg0.get(0);
+		    ParseUser user = arg0.get(0);
 		    if (username != null) {
 			String existingUsername = user.getUsername();
 			if (!username.equals(existingUsername)) {

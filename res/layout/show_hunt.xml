@@ -55,35 +55,26 @@
             android:layout_alignBottom="@+id/tvEnd"
             android:layout_toRightOf="@+id/tvEnd"
             android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <Button
+            android:id="@+id/edit_hunt"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="5dip"
+            android:text="Edit Hunt"
+            android:textColor="#FFFFFF"  
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="Players"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/listView2"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin" >
-        </ListView>
-
-        <TextView
+                <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,12 +83,44 @@
             android:text="Items"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <ListView
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+                <ListView
             android:id="@+id/listView1"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="3dp"
+            android:scrollbarStyle="insideOverlay" >
+
         </ListView>
+        
+        
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="Players"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <ListView
+            android:id="@+id/listView2"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_weight="9"
+            android:paddingLeft="3dp"
+            android:scrollbarStyle="insideOverlay" >
+
+        </ListView>
+
     </LinearLayout>
 
 </LinearLayout>
