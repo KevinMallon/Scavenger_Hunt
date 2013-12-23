@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
@@ -62,7 +60,6 @@ public class CreateHuntActivity extends Activity {
 
     private void doCompleteHunt() {
 	final ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
-	final Context context = this;
 	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
 	    @Override
 	    public void done(ParseObject hunt, com.parse.ParseException e) {
@@ -87,8 +84,6 @@ public class CreateHuntActivity extends Activity {
 		    });
 		} else {
 		    CharSequence text = "Sorry, the hunt was not updated.";
-		    int duration = Toast.LENGTH_SHORT;
-		    Toast.makeText(context, text, duration).show();
 		    finish();
 		}
 	    }
@@ -121,7 +116,7 @@ public class CreateHuntActivity extends Activity {
 
     private void showItems(String[] items) {
 	TextView players = (TextView) findViewById(R.id.tv1);
-	players.setText(Arrays.toString(items).replaceAll("\\[|\\]", ""));
+	players.append(Arrays.toString(items).replaceAll("\\[|\\]", ""));
     }
 
     private String getHuntTitleInput() {
@@ -152,6 +147,16 @@ public class CreateHuntActivity extends Activity {
 	return input.getText().toString();
     }
 
+    private String hasItems() {
+	TextView items = (TextView) findViewById(R.id.tv2);
+	int itemsCount = items.getLineCount();
+	String hasItems = "no";
+	if (itemsCount > 0) {
+	    hasItems = "yes";
+	}
+	return hasItems;
+    }
+
     private void setupButtonCallbacks() {
 
 	findViewById(R.id.select_players).setOnClickListener(
@@ -172,6 +177,7 @@ public class CreateHuntActivity extends Activity {
 			AddItemsActivity.class);
 		i.putExtra("huntID", getHuntID());
 		i.putExtra("from", "create");
+		i.putExtra("hasItems", hasItems());
 		startActivityForResult(i, 100);
 	    }
 	});

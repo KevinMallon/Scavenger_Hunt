@@ -3,7 +3,6 @@ package com.example.scavengerhunt;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -62,10 +60,8 @@ public class ShowHunt extends Activity {
 		    Format formatter = new SimpleDateFormat("MM-dd-yy, h:mm a");
 
 		    title = (String) object.get("title");
-		    startTime = formatter.format(object
-			    .get("start_datetime"));
-		    endTime = formatter.format(object
-			    .get("end_datetime"));
+		    startTime = formatter.format(object.get("start_datetime"));
+		    endTime = formatter.format(object.get("end_datetime"));
 
 		    owner = (String) object.get("owner");
 		    final String username = currentUser.getUsername();
@@ -80,6 +76,15 @@ public class ShowHunt extends Activity {
 		    tvStartTime.setText(startTime);
 		    tvEndTime.setText(endTime);
 
+		    List<String> players = new ArrayList<String>();
+		    players = object.getList("huntPlayers");
+
+		    List<String> items = new ArrayList<String>();
+		    items = object.getList("huntItems");
+
+		    setPlayerList(players);
+		    setItemList(items);
+
 		} else {
 		    Log.d("ShowHunt",
 			    "ParseObject retrieval error: "
@@ -89,47 +94,7 @@ public class ShowHunt extends Activity {
 	    }
 
 	});
-	getItems();
-	getPlayers();
 	setupButtonCallbacks();
-    }
-
-    private void getItems() {
-	ParseQuery<ParseObject> query = ParseQuery.getQuery("HuntItem");
-	query.whereEqualTo("huntId", getHuntID());
-	query.selectKeys(Arrays.asList("itemName"));
-	query.findInBackground(new FindCallback<ParseObject>() {
-	    @Override
-	    public void done(List<ParseObject> objects, ParseException e) {
-		if (e == null) {
-		    List<String> items = new ArrayList<String>();
-		    for (ParseObject obj : objects) {
-			items.add((String) obj.get("itemName"));
-		    }
-		    setItemList(items);
-		}
-	    }
-	});
-    }
-
-    private void getPlayers() {
-	ParseQuery<ParseObject> playerquery = ParseQuery.getQuery("HuntPlayer");
-	playerquery.whereEqualTo("huntId", getHuntID());
-	playerquery.selectKeys(Arrays.asList("userName"));
-	playerquery.findInBackground(new FindCallback<ParseObject>() {
-	    @Override
-	    public void done(List<ParseObject> objects, ParseException e) {
-		System.out.println(" # players " + objects.size());
-		if (e == null) {
-		    List<String> players = new ArrayList<String>();
-		    for (ParseObject obj : objects) {
-			players.add((String) obj.get("userName"));
-		    }
-		    System.out.println(" # players " + players);
-		    setPlayerList(players);
-		}
-	    }
-	});
     }
 
     private void setItemList(List<String> items) {
@@ -166,15 +131,6 @@ public class ShowHunt extends Activity {
 	    }
 	});
 
-	// findViewById(R.id.edit_hunt).setOnClickListener(
-	// new OnClickListener() {
-	// public void onClick(View v) {
-	// Intent i = new Intent(ShowHunt.this,
-	// CreateHuntActivity.class);
-	// i.putExtra("huntID", getHuntID());
-	// startActivity(i);
-	// }
-	// });
     }
 
 }

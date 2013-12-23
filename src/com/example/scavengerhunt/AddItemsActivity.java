@@ -1,10 +1,12 @@
 package com.example.scavengerhunt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -12,10 +14,10 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
+import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 public class AddItemsActivity extends CreateHuntActivity {
     private EditText itemNameEditText;
@@ -38,40 +40,26 @@ public class AddItemsActivity extends CreateHuntActivity {
 	return from;
     }
 
+    private String hasItems() {
+	Intent i = getIntent();
+	String hasItems = i.getStringExtra("hasItems");
+	System.out.println("hasItems add " + hasItems);
+	return hasItems;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.add_items_activity);
 	itemNameEditText = (EditText) findViewById(R.id.item_input);
-	// if (hasItems() == "yes") {
-	ParseQuery<ParseObject> query = ParseQuery.getQuery("HuntItem");
-	query.whereEqualTo("huntId", getHuntID());
-	query.findInBackground(new FindCallback<ParseObject>() {
-	    @Override
-	    public void done(List<ParseObject> objects, ParseException e) {
-		if (e == null) {
-		    ArrayList<String> itemNames = new ArrayList<String>();
-		    int i = 0;
-		    int a = 0;
-		    // System.out.println("currentItems in onCreate "
-		    // + currentItems);
-		    String itemName = new String();
-		    for (ParseObject obj : objects) {
-			itemName = (java.lang.String) obj.get("itemName");
-			itemNames.add(itemName);
-			i++;
-			a++;
-		    }
-		    System.out.println("itemNames" + itemNames);
-		    m_listItems = itemNames;
-		    System.out.println("m_listItems set" + m_listItems);
-		    setAdapter(m_listItems);
-		}
+	lv = (ListView) findViewById(R.id.listView1);
+	m_adapter = new ArrayAdapter<String>(this,
+		android.R.layout.simple_list_item_1, m_listItems);
+	lv.setAdapter(m_adapter);
 
-	    }
-
-	});
-	// }
+	System.out.println("hasItems oncreate " + hasItems());
+	if (hasItems() == "yes") {
+	}
 
 	setupButtonCallbacks();
     }
@@ -94,13 +82,16 @@ public class AddItemsActivity extends CreateHuntActivity {
 		if (null != itemInput && itemInput.length() > 0) {
 
 		    m_listItems.add(itemInput);
+		    if (count == 0 && from() == "create") {
+			setAdapter(m_listItems);
+		    }
 		    m_adapter.notifyDataSetChanged();
 		    itemDisplay();
 
-		    ParseObject huntItem = new ParseObject("HuntItem");
-		    huntItem.put("itemName", itemInput);
-		    huntItem.put("huntId", getHuntID());
-		    huntItem.saveInBackground();
+		    // ParseObject huntItem = new ParseObject("HuntItem");
+		    // huntItem.put("itemName", itemInput);
+		    // huntItem.put("huntId", getHuntID());
+		    // huntItem.saveInBackground();
 		}
 		itemNameEditText.requestFocus();
 		count += 1;
@@ -134,6 +125,7 @@ public class AddItemsActivity extends CreateHuntActivity {
 		    public final void onClick(View v) {
 			Intent intent = new Intent(AddItemsActivity.this,
 				CreateHuntActivity.class);
+			saveItems();
 			if (from() == "create") {
 			    intent.putExtra("data", Integer.toString(count));
 			    setResult(1, intent);
@@ -196,6 +188,31 @@ public class AddItemsActivity extends CreateHuntActivity {
 	intent.putExtras(bundle);
 	setResult(1, intent);
 	finish();
+    }
+
+    private void saveItems() {
+	final List<String> items = Arrays.asList(getItemsArray());
+
+	ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
+	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
+	    public void done(ParseObject hunt, com.parse.ParseException e) {
+		if (e == null) {
+		    // System.out.println("huntItems " + itemsArray);
+		    // System.out.println("huntID " + getHuntID());
+		    hunt.addAllUnique("huntItems", items);
+		    hunt.saveInBackground(new SaveCallback() {
+			public void done(com.parse.ParseException arg0) {
+			    if (arg0 == null) {
+				Log.d("Item Save", "Items Saved!");
+			    } else {
+				Log.i("ItemsActivity", "Error saving items "
+					+ arg0);
+			    }
+			}
+		    });
+		}
+	    }
+	});
     }
 
     public void itemDisplay() {

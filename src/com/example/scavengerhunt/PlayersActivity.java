@@ -15,8 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -34,7 +34,6 @@ public class PlayersActivity extends Activity implements OnClickListener {
     private String getCurrentPlayers() {
 	Intent intent = getIntent();
 	String currentPlayers = intent.getStringExtra("currentPlayers");
-	System.out.println("currentPlayers received " + currentPlayers);
 	return currentPlayers;
     }
 
@@ -98,78 +97,103 @@ public class PlayersActivity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-	removePlayers();
-	SparseBooleanArray checked = listView.getCheckedItemPositions();
+	SparseBooleanArray checkedPositions = listView
+		.getCheckedItemPositions();
 	ArrayList<String> selectedPlayers = new ArrayList<String>();
-	ArrayList<String> selectedPositions = new ArrayList<String>();
-	for (int i = 0; i < checked.size(); i++) {
-	    // Item position in adapter
-	    int position = checked.keyAt(i);
-	    // Add if it is checked i.e.) == TRUE!
-	    if (checked.valueAt(i))
-		selectedPlayers.add(adapter.getItem(position));
-	    selectedPositions.add(Integer.toString(position));
+	ArrayList<String> unselectedPlayers = new ArrayList<String>();
+	for (int i = 0; i < adapter.getCount(); i++) {
+	    if (checkedPositions.get(i)) {
+		selectedPlayers.add(adapter.getItem(i));
+	    } else {
+		unselectedPlayers.add(adapter.getItem(i));
+	    }
 	}
-	savePlayers(selectedPlayers);
+
+	removePlayers(selectedPlayers, unselectedPlayers);
 	returnPlayers(selectedPlayers);
     };
 
-    private void removePlayers() {
-	ParseQuery<ParseObject> playerquery = ParseQuery.getQuery("HuntPlayer");
-	playerquery.whereEqualTo("huntId", getHuntID());
-	playerquery.findInBackground(new FindCallback<ParseObject>() {
-	    @Override
-	    public void done(List<ParseObject> objects, ParseException e) {
-		System.out.println(" # players " + objects.size());
+    private void removePlayers(final ArrayList<String> selectedPlayers,
+	    final ArrayList<String> unselectedPlayers) {
+	final List<String> removeList = unselectedPlayers;
+	ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
+	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
+	    public void done(ParseObject hunt, com.parse.ParseException e) {
 		if (e == null) {
-		    for (ParseObject obj : objects) {
-			obj.deleteInBackground(new DeleteCallback() {
-			    @Override
-			    public void done(ParseException e) {
-				if (e == null) {
-				    Log.d("Delete", "huntPlayer deleted!");
-				} else {
-				    Log.d("Delete",
-					    "Error deleting huntPlayer: " + e);
-				}
+		    System.out.println("remove " + removeList);
+
+		    hunt.removeAll("huntPlayers", removeList);
+		    hunt.saveInBackground(new SaveCallback() {
+			public void done(com.parse.ParseException arg0) {
+			    if (arg0 == null) {
+				Log.d("Player Save", "Players Removed!");
+			    } else {
+				Log.i("PlayersActivity",
+					"Error removing players " + arg0);
 			    }
-			});
-		    }
+			}
+		    });
+		    savePlayers(selectedPlayers);
 		}
 	    }
 	});
     }
 
-    private void savePlayers(ArrayList<String> selectedPlayers) {
-	String huntId = getHuntID();
-	for (int i = 0; i < selectedPlayers.size(); i++) {
-	    String user = selectedPlayers.get(i);
-	    Log.d("Player", user.toString());
-	    ParseObject huntPlayer = new ParseObject("HuntPlayer");
-	    huntPlayer.put("userName", user);
-	    huntPlayer.put("huntId", huntId);
-	    huntPlayer.saveInBackground(new SaveCallback() {
-		@Override
-		public void done(ParseException e) {
-		    if (e == null) {
-			Log.d("Save", "gamePlayer data saved!");
-		    } else {
-			Log.d("Save", "Error saving gamePlayer: " + e);
-		    }
-		}
+    private void savePlayers(final ArrayList<String> selectedPlayers) {
+	final List<String> addList = selectedPlayers;
+	ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
+	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
+	    public void done(ParseObject hunt, com.parse.ParseException e) {
+		if (e == null) {
+		    System.out.println("addList " + addList);
+		    System.out.println("huntID " + getHuntID());
 
-	    });
-	}
+		    hunt.addAllUnique("huntPlayers", addList);
+		    hunt.saveInBackground(new SaveCallback() {
+			public void done(com.parse.ParseException arg0) {
+			    if (arg0 == null) {
+				Log.d("Player Save", "Players Saved!");
+			    } else {
+				Log.i("PlayersActivity",
+					"Error saving players " + arg0);
+			    }
+			}
+		    });
+		}
+	    }
+	});
     }
+
+    // private void savePlayers(ArrayList<String> selectedPlayers) {
+    // String huntId = getHuntID();
+    // for (int i = 0; i < selectedPlayers.size(); i++) {
+    // String user = selectedPlayers.get(i);
+    // Log.d("Player", user.toString());
+    // ParseObject huntPlayer = new ParseObject("HuntPlayer");
+    // huntPlayer.put("userName", user);
+    // huntPlayer.put("huntId", huntId);
+    // huntPlayer.saveInBackground(new SaveCallback() {
+    // @Override
+    // public void done(ParseException e) {
+    // if (e == null) {
+    // Log.d("Save", "gamePlayer data saved!");
+    // } else {
+    // Log.d("Save", "Error saving gamePlayer: " + e);
+    // }
+    // }
+    //
+    // });
+    // }
+    // }
 
     // private void savePlayers(final ArrayList<String> selectedPlayers) {
     // ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
     // query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
     // public void done(ParseObject hunt, com.parse.ParseException e) {
     // if (e == null) {
-    // System.out.println("players " + selectedPlayers);
-    // System.out.println("huntID " + getHuntID());
-    // hunt.add("players", selectedPlayers);
+    // // System.out.println("huntPlayers " + playersArray);
+    // // System.out.println("huntID " + getHuntID());
+    // hunt.addAll("huntPlayers", selectedPlayers);
     // hunt.saveInBackground(new SaveCallback() {
     // public void done(com.parse.ParseException arg0) {
     // if (arg0 == null) {
