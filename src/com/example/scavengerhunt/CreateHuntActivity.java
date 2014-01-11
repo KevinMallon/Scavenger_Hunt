@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,16 +29,10 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class CreateHuntActivity extends Activity {
-
     static final int START_DATE_DIALOG_ID = 1;
     static final int START_TIME_DIALOG_ID = 2;
     static final int END_DATE_DIALOG_ID = 3;
     static final int END_TIME_DIALOG_ID = 4;
-    public Button selectPlayersButton;
-    public Button addItemsButton;
-    public Button createhuntButton_CreateHunt;
-    public String startDate;
-    public String startTime;
 
     public ArrayList<String> itemStrArr;
     ArrayAdapter<String> adapter;
@@ -51,11 +44,23 @@ public class CreateHuntActivity extends Activity {
 	return huntID;
     }
 
+    public String getHuntTitle() {
+	Intent i = getIntent();
+	String huntTitle = i.getStringExtra("Title");
+	return huntTitle;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.create_hunt);
+	doPopulateTitle();
 	setupButtonCallbacks();
+    }
+
+    private void doPopulateTitle() {
+	final EditText textbox_Title = (EditText) findViewById(R.id.textbox_Title);
+	textbox_Title.setText(getHuntTitle());
     }
 
     private void doCompleteHunt() {
@@ -64,28 +69,28 @@ public class CreateHuntActivity extends Activity {
 	    @Override
 	    public void done(ParseObject hunt, com.parse.ParseException e) {
 		if (e == null) {
-		    hunt.put("title", getHuntTitleInput());
-		    hunt.put("start_datetime", getStartDateTime());
-		    hunt.put("end_datetime", getEndDateTime());
-		    hunt.saveInBackground(new SaveCallback() {
-			@Override
-			public void done(com.parse.ParseException arg0) {
-			    if (arg0 == null) {
-
-				Intent showhunt = new Intent(
-					CreateHuntActivity.this, ShowHunt.class);
-				showhunt.putExtra("HuntID", getHuntID());
-				startActivity(showhunt);
-			    } else {
-				Log.i("ScavengerHuntActivity",
-					"game title that is inputted " + arg0);
-			    }
-			}
-		    });
-		} else {
-		    CharSequence text = "Sorry, the hunt was not updated.";
-		    finish();
+		    Log.i("ScavengerHuntActivity",
+			    "game title that is inputted "
+				    + getHuntTitleInput());
 		}
+		hunt.put("title", getHuntTitleInput());
+		hunt.put("start_datetime", getStartDateTime());
+		hunt.put("end_datetime", getEndDateTime());
+		hunt.saveInBackground(new SaveCallback() {
+		    @Override
+		    public void done(com.parse.ParseException arg0) {
+			if (arg0 == null) {
+
+			    Intent showhunt = new Intent(
+				    CreateHuntActivity.this, MyHunt.class);
+			    showhunt.putExtra("HuntID", getHuntID());
+			    startActivity(showhunt);
+			} else {
+			    Log.i("ScavengerHuntActivity",
+				    "game title that is inputted " + arg0);
+			}
+		    }
+		});
 	    }
 	});
     }

@@ -12,7 +12,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	
     <application
         android:name=".ScavengerHuntApplication"
         android:allowBackup="true"
@@ -48,7 +50,8 @@
             android:name=".UpdateHuntActivity"
             android:label="Update Hunt" >
         </activity>
-        <activity android:name=".SingleItemView" >
+        <activity android:name=".SingleHuntView"
+            android:label="Scavenger Hunt" >
         </activity>
         <activity
             android:name=".PlayersActivity"
@@ -63,17 +66,28 @@
             android:label="Remove Items" >
         </activity>
         <activity
-            android:name=".ShowHunt"
+            android:name=".MyHunt"
             android:label="Scavenger Hunt" >
         </activity>
         <activity
-            android:name=".AllHuntsActivity"
-            android:label="All Hunts" >
+            android:name=".PlayingHuntsActivity"
+            android:label="Hunts I'm Playing" >
         </activity>
         <activity
             android:name=".UpdateItems"
             android:label="Update Items" >
         </activity>
+        <activity
+            android:name=".MyHuntsActivity"
+            android:label="Hunts I've Created" >
+        </activity>        
+	<service android:name="com.parse.PushService" />
+	<receiver android:name="com.parse.ParseBroadcastReceiver">
+	  <intent-filter>
+	    <action android:name="android.intent.action.BOOT_COMPLETED" />
+	    <action android:name="android.intent.action.USER_PRESENT" />
+	  </intent-filter>
+	</receiver>  
     </application>
 
 </manifest>

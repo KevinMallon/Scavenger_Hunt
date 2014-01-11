@@ -9,6 +9,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,14 +24,13 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-public class ShowHunt extends Activity {
-    protected static final String ShowHunt = null;
-    protected static final int VISIBLE = 0;
-    protected static final int GONE = 0;
+public class MyHunt extends Activity {
     ListView listView;
-    ArrayAdapter<String> adapter;
-    ArrayAdapter<String> adapter2;
+    ArrayAdapter<String> playersadapter;
+    ArrayAdapter<String> itemsadapter;
     ParseUser currentUser = ParseUser.getCurrentUser();
+    final String currentUsername = (String) ParseUser.getCurrentUser().get(
+	    "username");
     Button editHuntButton;
 
     private String getHuntID() {
@@ -40,7 +42,8 @@ public class ShowHunt extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.show_hunt);
+	setContentView(R.layout.my_hunt);
+	setupEditButtonCallbacks();
 	final TextView tvHuntTitle = (TextView) findViewById(R.id.tvHuntTitle);
 	final TextView tvStartTime = (TextView) findViewById(R.id.tvStartTime);
 	final TextView tvEndTime = (TextView) findViewById(R.id.tvEndTime);
@@ -63,14 +66,8 @@ public class ShowHunt extends Activity {
 		    startTime = formatter.format(object.get("start_datetime"));
 		    endTime = formatter.format(object.get("end_datetime"));
 
-		    owner = (String) object.get("owner");
-		    final String username = currentUser.getUsername();
-		    System.out.println("current user " + username);
+		    System.out.println("current user " + currentUsername);
 		    System.out.println("owner " + owner);
-
-		    if (owner == username) {
-			setButtonVisibility();
-		    }
 
 		    tvHuntTitle.setText(title);
 		    tvStartTime.setText(startTime);
@@ -94,38 +91,28 @@ public class ShowHunt extends Activity {
 	    }
 
 	});
-	setupButtonCallbacks();
     }
 
     private void setItemList(List<String> items) {
 	listView = (ListView) findViewById(R.id.listView1);
-	adapter = new ArrayAdapter<String>(ShowHunt.this, R.layout.small_list,
-		items);
-	listView.setAdapter(adapter);
+	itemsadapter = new ArrayAdapter<String>(MyHunt.this,
+		R.layout.small_list, items);
+	listView.setAdapter(itemsadapter);
     }
 
     private void setPlayerList(List<String> playerList) {
 	listView = (ListView) findViewById(R.id.listView2);
-	adapter2 = new ArrayAdapter<String>(ShowHunt.this, R.layout.small_list,
-		playerList);
-	listView.setAdapter(adapter2);
+	playersadapter = new ArrayAdapter<String>(MyHunt.this,
+		R.layout.small_list, playerList);
+	listView.setAdapter(playersadapter);
     }
 
-    @Override
-    public void onResume() {
-	super.onResume();
-    }
-
-    private void setButtonVisibility() {
-	editHuntButton.setVisibility(View.GONE);
-    }
-
-    private void setupButtonCallbacks() {
+    private void setupEditButtonCallbacks() {
 	editHuntButton = (Button) findViewById(R.id.edit_hunt);
 	editHuntButton.setOnClickListener(new View.OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		Intent i = new Intent(ShowHunt.this, UpdateHuntActivity.class);
+		Intent i = new Intent(MyHunt.this, UpdateHuntActivity.class);
 		i.putExtra("UpdateHuntActivity", getHuntID());
 		startActivity(i);
 	    }
@@ -133,4 +120,27 @@ public class ShowHunt extends Activity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+	MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.mainmenu, menu);
+	return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.menuitem_prefs:
+	    // Intent i = new Intent(mThisActivity, PrefsActivity.class);
+	    // mThisActivity.startActivity(i);
+	    return true;
+	case R.id.menuitem_logout:
+	    ParseUser.logOut();
+	    finish();
+	    return true;
+	default:
+	    break;
+	}
+	return false;
+    }
 }

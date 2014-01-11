@@ -18,23 +18,31 @@ import android.widget.ListView;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class PlayersActivity extends Activity implements OnClickListener {
-
+    ParseUser currentUser = ParseUser.getCurrentUser();
     protected static final String String = null;
     ListView listView;
     Button button;
     ArrayAdapter<String> adapter;
-    List<ParseUser> objects;
+    private List<ParseUser> userList = new ArrayList<ParseUser>();
 
     private String getCurrentPlayers() {
 	Intent intent = getIntent();
 	String currentPlayers = intent.getStringExtra("currentPlayers");
 	return currentPlayers;
+    }
+
+    private String getHuntID() {
+	Intent i = getIntent();
+	String huntID = i.getStringExtra("huntID");
+	return huntID;
     }
 
     @Override
@@ -44,18 +52,19 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	ParseQuery<ParseUser> query = ParseUser.getQuery();
 	query.findInBackground(new FindCallback<ParseUser>() {
 	    @Override
-	    public void done(List<ParseUser> objects, ParseException e) {
+	    public void done(List<ParseUser> users, ParseException e) {
 		if (e == null) {
-		    String[] usernames = new String[objects.size()];
-		    int selectedPlayerPositions[] = new int[objects.size()];
+		    String[] usernames = new String[users.size()];
+		    int selectedPlayerPositions[] = new int[users.size()];
 		    int i = 0;
 		    int a = 0;
 		    String currentPlayers = getCurrentPlayers();
 		    System.out.println("currentPlayers in onCreate "
 			    + currentPlayers);
 		    String username = new String();
-		    for (ParseUser obj : objects) {
-			username = (java.lang.String) obj.get("username");
+		    System.out.println("all users " + users);
+		    for (ParseUser user : users) {
+			username = (java.lang.String) user.get("username");
 			usernames[i] = username;
 			if (currentPlayers != null) {
 			    boolean contains = currentPlayers
@@ -69,6 +78,7 @@ public class PlayersActivity extends Activity implements OnClickListener {
 			i++;
 			a++;
 		    }
+		    userList = users;
 		    System.out.println("selectedPlayerPositions "
 			    + selectedPlayerPositions);
 		    listView = (ListView) findViewById(R.id.list);
@@ -89,18 +99,12 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	});
     }
 
-    private String getHuntID() {
-	Intent i = getIntent();
-	String huntID = i.getStringExtra("huntID");
-	return huntID;
-    }
-
     @Override
     public void onClick(View v) {
 	SparseBooleanArray checkedPositions = listView
 		.getCheckedItemPositions();
-	ArrayList<String> selectedPlayers = new ArrayList<String>();
-	ArrayList<String> unselectedPlayers = new ArrayList<String>();
+	final ArrayList<String> selectedPlayers = new ArrayList<String>();
+	final ArrayList<String> unselectedPlayers = new ArrayList<String>();
 	for (int i = 0; i < adapter.getCount(); i++) {
 	    if (checkedPositions.get(i)) {
 		selectedPlayers.add(adapter.getItem(i));
@@ -108,7 +112,6 @@ public class PlayersActivity extends Activity implements OnClickListener {
 		unselectedPlayers.add(adapter.getItem(i));
 	    }
 	}
-
 	removePlayers(selectedPlayers, unselectedPlayers);
 	returnPlayers(selectedPlayers);
     };
@@ -121,7 +124,7 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	    public void done(ParseObject hunt, com.parse.ParseException e) {
 		if (e == null) {
 		    System.out.println("remove " + removeList);
-
+		    System.out.println("save " + selectedPlayers);
 		    hunt.removeAll("huntPlayers", removeList);
 		    hunt.saveInBackground(new SaveCallback() {
 			public void done(com.parse.ParseException arg0) {
@@ -134,6 +137,7 @@ public class PlayersActivity extends Activity implements OnClickListener {
 			}
 		    });
 		    savePlayers(selectedPlayers);
+		    invitePlayers(hunt, selectedPlayers);
 		}
 	    }
 	});
@@ -145,9 +149,6 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
 	    public void done(ParseObject hunt, com.parse.ParseException e) {
 		if (e == null) {
-		    System.out.println("addList " + addList);
-		    System.out.println("huntID " + getHuntID());
-
 		    hunt.addAllUnique("huntPlayers", addList);
 		    hunt.saveInBackground(new SaveCallback() {
 			public void done(com.parse.ParseException arg0) {
@@ -164,55 +165,36 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	});
     }
 
-    // private void savePlayers(ArrayList<String> selectedPlayers) {
-    // String huntId = getHuntID();
-    // for (int i = 0; i < selectedPlayers.size(); i++) {
-    // String user = selectedPlayers.get(i);
-    // Log.d("Player", user.toString());
-    // ParseObject huntPlayer = new ParseObject("HuntPlayer");
-    // huntPlayer.put("userName", user);
-    // huntPlayer.put("huntId", huntId);
-    // huntPlayer.saveInBackground(new SaveCallback() {
-    // @Override
-    // public void done(ParseException e) {
-    // if (e == null) {
-    // Log.d("Save", "gamePlayer data saved!");
-    // } else {
-    // Log.d("Save", "Error saving gamePlayer: " + e);
-    // }
-    // }
-    //
-    // });
-    // }
-    // }
+    private void invitePlayers(ParseObject hunt,
+	    ArrayList<String> selectedPlayers) {
 
-    // private void savePlayers(final ArrayList<String> selectedPlayers) {
-    // ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
-    // query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
-    // public void done(ParseObject hunt, com.parse.ParseException e) {
-    // if (e == null) {
-    // // System.out.println("huntPlayers " + playersArray);
-    // // System.out.println("huntID " + getHuntID());
-    // hunt.addAll("huntPlayers", selectedPlayers);
-    // hunt.saveInBackground(new SaveCallback() {
-    // public void done(com.parse.ParseException arg0) {
-    // if (arg0 == null) {
-    // Log.d("Player Save", "Players Saved!");
-    // } else {
-    // Log.i("PlayersActivity",
-    // "Error saving players " + arg0);
-    // }
-    // }
-    // });
-    // }
-    // }
-    // });
-    // }
+	for (String huntPlayer : selectedPlayers) {
+	    ParseQuery<ParseInstallation> pushQuery = ParseInstallation
+		    .getQuery();
+	    pushQuery.whereEqualTo("username", huntPlayer);
+
+	    Log.d("push player", huntPlayer);
+	    ParsePush push = new ParsePush();
+	    push.setQuery(pushQuery);
+	    push.setMessage(currentUser.getString("username")
+		    + " has invited you to join scavenger hunt, "
+		    + hunt.getString("title") + "!");
+	    push.sendInBackground();
+
+	    ParseObject notification = new ParseObject("notification");
+	    notification.put("huntId", getHuntID());
+	    notification.put("huntTitle", hunt.get("title"));
+	    notification.put("owner", currentUser.getObjectId());
+	    notification.put("invitedUser", huntPlayer);
+	    notification.put("sentNotification", true);
+	    notification.saveInBackground();
+	}
+    }
 
     private void returnPlayers(ArrayList<String> selectedPlayers) {
 	String[] players = new String[selectedPlayers.size()];
 	for (int i = 0; i < selectedPlayers.size(); i++) {
-	    players[i] = selectedPlayers.get(i);
+	    players[i] = selectedPlayers.get(i).toString();
 	}
 	Intent intent = new Intent(PlayersActivity.this,
 		CreateHuntActivity.class);

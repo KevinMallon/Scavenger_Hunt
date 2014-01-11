@@ -29,14 +29,24 @@
 		    android:textStyle="normal" />
 
 		<Button
-		    android:id="@+id/mainMenuButton_myGames"
+		    android:id="@+id/mainMenuButton_myHunts"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_marginBottom="10dp"
 		    android:gravity="center"
-		    android:text="@string/label_mygames"
+		    android:text="@string/label_myhunts"
 		    android:textColor="#FFFFFF"
 		    android:textSize="16sp"
 		    android:textStyle="normal" />
 
+		<Button
+            android:id="@+id/mainMenuButton_huntsPlaying"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="@string/label_huntsiamplaying"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="normal" />
 </LinearLayout>

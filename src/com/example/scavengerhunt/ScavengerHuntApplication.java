@@ -8,13 +8,9 @@ import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
-
-/**
- * Top level Scavenger CreateHuntActivity declared as the application in the
- * AndroidManifest.xml. There is only one instance of this class created...by
- * the android OS...upon startup.
- */
+import com.parse.PushService;
 
 public class ScavengerHuntApplication extends Application {
 
@@ -31,6 +27,7 @@ public class ScavengerHuntApplication extends Application {
     public void onCreate() {
 	super.onCreate();
 	instance = this;
+	initializeParse();
     }
 
     public void initializeParse() {
@@ -47,6 +44,9 @@ public class ScavengerHuntApplication extends Application {
 		Log.i(TAG, "Parse.initialize - done");
 		// add some delay, to show the splash screen
 		wait(START_WAIT_TIME);
+		PushService
+			.setDefaultPushCallback(this, MainMenuActivity.class);
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 	    }
 	} catch (Exception ex) {
 	    Log.e(TAG + "." + "Exception in initializeParse", ex.getMessage());

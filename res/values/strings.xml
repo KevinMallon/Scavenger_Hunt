@@ -42,8 +42,8 @@
     <string name="label_loginEmailAlreadyExists">Already a user with that email address.  Please choose a new email</string> 
     <string name="label_selectOption">What would you like to do?</string>
     <string name="label_newgame">Create a New Hunt</string>
-    <string name="label_mygames">View Hunts</string>
-    <string name="label_gamesiamplaying">View Games I am Playing</string>
+    <string name="label_myhunts">View Hunts I Created</string>
+    <string name="label_huntsiamplaying">View Hunts I am Playing</string>
     <string name="label_joingame">Join a Game</string>
     <string name="namelabel">"Name : "</string>
     
