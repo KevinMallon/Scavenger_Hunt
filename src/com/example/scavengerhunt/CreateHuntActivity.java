@@ -114,14 +114,14 @@ public class CreateHuntActivity extends Activity {
     }
 
     private void showPlayers(String[] selectedPlayers) {
-	TextView players = (TextView) findViewById(R.id.tv2);
+	TextView players = (TextView) findViewById(R.id.tvPlayers);
 	players.setText(Arrays.toString(selectedPlayers).replaceAll("\\[|\\]",
 		""));
     }
 
     private void showItems(String[] items) {
-	TextView players = (TextView) findViewById(R.id.tv1);
-	players.append(Arrays.toString(items).replaceAll("\\[|\\]", ""));
+	TextView players = (TextView) findViewById(R.id.tvItems);
+	players.setText(Arrays.toString(items).replaceAll("\\[|\\]", ""));
     }
 
     private String getHuntTitleInput() {
@@ -139,7 +139,7 @@ public class CreateHuntActivity extends Activity {
     }
 
     private String getPlayersInput() {
-	return getContents(R.id.tv2);
+	return getContents(R.id.tvPlayers);
     }
 
     private String getUserInput(int id) {
@@ -153,7 +153,7 @@ public class CreateHuntActivity extends Activity {
     }
 
     private String hasItems() {
-	TextView items = (TextView) findViewById(R.id.tv2);
+	TextView items = (TextView) findViewById(R.id.tvPlayers);
 	int itemsCount = items.getLineCount();
 	String hasItems = "no";
 	if (itemsCount > 0) {

@@ -82,16 +82,16 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv1"
+            android:id="@+id/tvItems"
             android:layout_width="500dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_alignBaseline="@+id/add_items"
             android:layout_toRightOf="@+id/add_items"
             android:padding="10dp"
             android:paddingLeft="10dp"
-            android:scrollbarStyle="insideInset" >
+            android:scrollbarStyle="insideInset"
+            android:textSize="12dp" />
 
-        </TextView>
 
     <Button
         android:id="@+id/select_players"
@@ -107,14 +107,15 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tv2"
+        android:id="@+id/tvPlayers"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/select_players"
+        android:layout_below="@+id/tvItems"
         android:layout_toRightOf="@+id/add_items"
         android:padding="10dp"
         android:paddingLeft="10dp"
-        android:scrollbarStyle="insideInset" />
+        android:scrollbarStyle="insideInset"
+        android:textSize="12dp" />
 
     </RelativeLayout>
     

@@ -3,6 +3,7 @@ package com.example.scavengerhunt;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -15,9 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -73,13 +76,11 @@ public class MyHunt extends Activity {
 		    tvStartTime.setText(startTime);
 		    tvEndTime.setText(endTime);
 
-		    List<String> players = new ArrayList<String>();
-		    players = object.getList("huntPlayers");
+		    List<String> players = object.getList("huntPlayers");
 
-		    List<String> items = new ArrayList<String>();
-		    items = object.getList("huntItems");
+		    List<String> items = object.getList("huntItems");
 
-		    setPlayerList(players);
+		    getDecliningPlayers(players);
 		    setItemList(items);
 
 		} else {
@@ -93,6 +94,36 @@ public class MyHunt extends Activity {
 	});
     }
 
+    private void getDecliningPlayers(final List<String> players) {
+	ParseQuery<ParseObject> declinedQuery = ParseQuery.getQuery("Declined");
+	declinedQuery.whereEqualTo("hunt", getHuntID());
+	declinedQuery.findInBackground(new FindCallback<ParseObject>() {
+	    @Override
+	    public void done(List<ParseObject> decliningPlayerListObject,
+		    ParseException e) {
+		if (e == null) {
+		    final String[] decliningPlayers = new String[decliningPlayerListObject
+			    .size()];
+		    int i = 0;
+		    String decliner = new String();
+
+		    for (ParseObject decline : decliningPlayerListObject) {
+			decliner = (String) decline.get("userName");
+			decliningPlayers[i] = decliner;
+			System.out.println("decliner hunt" + decliner);
+			i++;
+		    }
+		    List<String> remainingPlayers = new ArrayList<String>(
+			    players);
+		    remainingPlayers.removeAll(Arrays.asList(decliningPlayers));
+		    setPlayerList(remainingPlayers);
+		    System.out.println("remainingPlayers "
+			    + Arrays.asList(remainingPlayers));
+		}
+	    }
+	});
+    }
+
     private void setItemList(List<String> items) {
 	listView = (ListView) findViewById(R.id.listView1);
 	itemsadapter = new ArrayAdapter<String>(MyHunt.this,
@@ -100,11 +131,21 @@ public class MyHunt extends Activity {
 	listView.setAdapter(itemsadapter);
     }
 
-    private void setPlayerList(List<String> playerList) {
+    private void setPlayerList(final List<String> playerList) {
 	listView = (ListView) findViewById(R.id.listView2);
 	playersadapter = new ArrayAdapter<String>(MyHunt.this,
 		R.layout.small_list, playerList);
 	listView.setAdapter(playersadapter);
+    }
+
+    private String[] getPlayersArray() {
+	listView = (ListView) findViewById(R.id.listView2);
+	ListAdapter playersAdapter = listView.getAdapter();
+	String[] playersArray = new String[playersAdapter.getCount()];
+	for (int i = 0; i < playersAdapter.getCount(); i++) {
+	    playersArray[i] = (playersAdapter.getItem(i)).toString();
+	}
+	return playersArray;
     }
 
     private void setupEditButtonCallbacks() {
@@ -114,6 +155,9 @@ public class MyHunt extends Activity {
 	    public void onClick(View v) {
 		Intent i = new Intent(MyHunt.this, UpdateHuntActivity.class);
 		i.putExtra("UpdateHuntActivity", getHuntID());
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("players", getPlayersArray());
+		i.putExtras(bundle);
 		startActivity(i);
 	    }
 	});

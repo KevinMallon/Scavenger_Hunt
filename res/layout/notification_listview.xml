@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <Button
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Play" />
+ 
+    <TextView
+        android:id="@+id/titlelabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/playButton"
+        android:text="Hunt" />
+ 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/titlelabel" />
+ 
+    <TextView
+        android:id="@+id/gameidlabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titlelabel"
+        android:layout_toRightOf="@+id/playButton"
+        android:text="Hunt ID" />
+ 
+    <TextView
+        android:id="@+id/huntid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@+id/gameidlabel" />
+    
+    <Button
+        android:id="@+id/rejectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Reject" />
+ 
+    </RelativeLayout>
+
+
+
+
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <Button
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Play" />
+ 
+    <TextView
+        android:id="@+id/titlelabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/playButton"
+        android:text="Title" />
+ 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/titlelabel" />
+ 
+    <TextView
+        android:id="@+id/gameidlabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titlelabel"
+        android:layout_toRightOf="@+id/playButton"
+        android:text="Hunt ID" />
+ 
+    <TextView
+        android:id="@+id/huntid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@+id/gameidlabel" />
+    
+    <Button
+        android:id="@+id/rejectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Reject" />
+ 
+    </RelativeLayout>
+
+ -->

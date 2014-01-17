@@ -50,8 +50,8 @@
             android:name=".UpdateHuntActivity"
             android:label="Update Hunt" >
         </activity>
-        <activity android:name=".SingleHuntView"
-            android:label="Scavenger Hunt" >
+        <activity android:name=".PlayHuntActivity"
+            android:label="Hunt I'm Playing" >
         </activity>
         <activity
             android:name=".PlayersActivity"
@@ -67,7 +67,7 @@
         </activity>
         <activity
             android:name=".MyHunt"
-            android:label="Scavenger Hunt" >
+            android:label="Hunt I Created" >
         </activity>
         <activity
             android:name=".PlayingHuntsActivity"
@@ -79,7 +79,7 @@
         </activity>
         <activity
             android:name=".MyHuntsActivity"
-            android:label="Hunts I've Created" >
+            android:label="Hunts I Created" >
         </activity>        
 	<service android:name="com.parse.PushService" />
 	<receiver android:name="com.parse.ParseBroadcastReceiver">

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+ 
+    <TextView
+        android:id="@+id/userid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/username"
+        android:text="hidden"
+        android:visibility="gone"/>    
+
+        <CheckBox
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="4px"
+        android:layout_marginRight="10px" >
+    </CheckBox>
+    
+<!--     <CheckBox 
+    android:id="@android:id/check"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:gravity="center_vertical"
+    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip"
+    android:ellipsize="end"
+    android:singleLine="true"
+/> -->
+    
+</RelativeLayout>

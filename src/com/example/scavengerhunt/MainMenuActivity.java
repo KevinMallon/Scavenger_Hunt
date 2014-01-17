@@ -30,7 +30,8 @@ public class MainMenuActivity extends Activity {
 	setContentView(R.layout.mainmenu);
 	ParseInstallation installation = ParseInstallation
 		.getCurrentInstallation();
-	installation.put("owner", ParseUser.getCurrentUser());
+	installation.put("owner",
+		ParseUser.getCurrentUser().getString("username"));
 	installation.saveInBackground();
 	ParseAnalytics.trackAppOpened(getIntent());
 	setupButtonCallbacks();
@@ -38,35 +39,27 @@ public class MainMenuActivity extends Activity {
 
     private void doCreateHunt(final String title) {
 	ParseUser currentUser = ParseUser.getCurrentUser();
-
-	if (currentUser != null && currentUser.getObjectId() != null) {
-	    final String username = currentUser.getUsername();
-	    final ParseObject hunt = new ParseObject("Hunt");
-	    hunt.put("title", title);
-	    hunt.put("owner", username);
-	    hunt.saveInBackground(new SaveCallback() {
-		@Override
-		public void done(ParseException e) {
-		    if (e == null) {
-			String huntID = hunt.getObjectId();
-			Intent i = new Intent(MainMenuActivity.this,
-				CreateHuntActivity.class);
-			Log.i("ScavengerHuntActivity", "intent Title " + title);
-			i.putExtra("CreateHuntActivity", huntID);
-			i.putExtra("Title", title);
-			startActivity(i);
-		    } else {
-			Log.d("CreateHuntActivity",
-				"ParseObject retrieval error: "
-					+ Log.getStackTraceString(e));
-		    }
+	final String username = currentUser.getUsername();
+	final ParseObject hunt = new ParseObject("Hunt");
+	hunt.put("title", title);
+	hunt.put("owner", username);
+	hunt.saveInBackground(new SaveCallback() {
+	    @Override
+	    public void done(ParseException e) {
+		if (e == null) {
+		    final String huntID = hunt.getObjectId();
+		    Intent i = new Intent(MainMenuActivity.this,
+			    CreateHuntActivity.class);
+		    Log.i("ScavengerHuntActivity", "intent Title " + title);
+		    i.putExtra("CreateHuntActivity", huntID);
+		    i.putExtra("Title", title);
+		    startActivity(i);
+		} else {
+		    Log.d("CreateHuntActivity", "ParseObject retrieval error: "
+			    + Log.getStackTraceString(e));
 		}
-
-	    });
-	} else {
-	    CharSequence text = "Sorry, the hunt was not updated.";
-	    finish();
-	}
+	    }
+	});
     }
 
     public void showStartTitleDialog(View v) {
@@ -75,7 +68,7 @@ public class MainMenuActivity extends Activity {
 	newFragment.show(getFragmentManager(), "startTitle");
     }
 
-    public void onFinishTitleFragment(String title) {
+    public void onFinishTitleFragment(final String title) {
 	doCreateHunt(title);
     }
 

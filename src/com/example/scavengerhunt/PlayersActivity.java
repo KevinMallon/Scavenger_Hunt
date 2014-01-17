@@ -55,32 +55,26 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	    public void done(List<ParseUser> users, ParseException e) {
 		if (e == null) {
 		    String[] usernames = new String[users.size()];
-		    int selectedPlayerPositions[] = new int[users.size()];
+		    boolean[] playerPositions = new boolean[users.size()];
 		    int i = 0;
-		    int a = 0;
 		    String currentPlayers = getCurrentPlayers();
 		    System.out.println("currentPlayers in onCreate "
 			    + currentPlayers);
 		    String username = new String();
 		    System.out.println("all users " + users);
 		    for (ParseUser user : users) {
-			username = (java.lang.String) user.get("username");
+			username = user.getString("username");
 			usernames[i] = username;
 			if (currentPlayers != null) {
 			    boolean contains = currentPlayers
 				    .contains(username);
 			    System.out.println("username " + username);
 			    System.out.println("contains? " + contains);
-			    if (contains == true) {
-				selectedPlayerPositions[a] = i;
-			    }
+			    playerPositions[i] = contains;
 			}
 			i++;
-			a++;
 		    }
 		    userList = users;
-		    System.out.println("selectedPlayerPositions "
-			    + selectedPlayerPositions);
 		    listView = (ListView) findViewById(R.id.list);
 		    button = (Button) findViewById(R.id.testbutton);
 		    adapter = new ArrayAdapter<String>(PlayersActivity.this,
@@ -88,9 +82,11 @@ public class PlayersActivity extends Activity implements OnClickListener {
 			    usernames);
 		    listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		    listView.setAdapter(adapter);
+		    int a = 0;
 		    if (currentPlayers != null) {
-			for (int position : selectedPlayerPositions) {
-			    listView.setItemChecked(position, true);
+			for (boolean position : playerPositions) {
+			    listView.setItemChecked(a, position);
+			    a++;
 			}
 		    }
 		    button.setOnClickListener(PlayersActivity.this);
@@ -165,13 +161,13 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	});
     }
 
-    private void invitePlayers(ParseObject hunt,
-	    ArrayList<String> selectedPlayers) {
+    private void invitePlayers(final ParseObject hunt,
+	    final ArrayList<String> selectedPlayers) {
 
 	for (String huntPlayer : selectedPlayers) {
 	    ParseQuery<ParseInstallation> pushQuery = ParseInstallation
 		    .getQuery();
-	    pushQuery.whereEqualTo("username", huntPlayer);
+	    pushQuery.whereEqualTo("owner", huntPlayer);
 
 	    Log.d("push player", huntPlayer);
 	    ParsePush push = new ParsePush();
@@ -181,7 +177,7 @@ public class PlayersActivity extends Activity implements OnClickListener {
 		    + hunt.getString("title") + "!");
 	    push.sendInBackground();
 
-	    ParseObject notification = new ParseObject("notification");
+	    final ParseObject notification = new ParseObject("notification");
 	    notification.put("huntId", getHuntID());
 	    notification.put("huntTitle", hunt.get("title"));
 	    notification.put("owner", currentUser.getObjectId());

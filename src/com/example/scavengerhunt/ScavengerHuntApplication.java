@@ -42,7 +42,6 @@ public class ScavengerHuntApplication extends Application {
 		defaultACL.setPublicReadAccess(true);
 		ParseACL.setDefaultACL(defaultACL, true);
 		Log.i(TAG, "Parse.initialize - done");
-		// add some delay, to show the splash screen
 		wait(START_WAIT_TIME);
 		PushService
 			.setDefaultPushCallback(this, MainMenuActivity.class);

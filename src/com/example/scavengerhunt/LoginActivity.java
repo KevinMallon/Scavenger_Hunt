@@ -42,7 +42,6 @@ public class LoginActivity extends Activity {
 	if (currentUser != null && currentUser.getObjectId() != null) {
 	    final String username = currentUser.getUsername();
 	    EditText usernameEditText = (EditText) findViewById(R.id.textbox_loginUsername);
-
 	    usernameEditText.setText(username);
 	    startActivity(new Intent(this, MainMenuActivity.class));
 	    finish();
