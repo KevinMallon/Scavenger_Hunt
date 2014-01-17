@@ -74,9 +74,7 @@ public class PlayHuntActivity extends Activity {
 		    allItems = object.getList("huntItems");
 
 		    if (new Date().after(endDatetime)) {
-			// calculateWinner();
-			// gameOverDialog(winner);
-			// final String winner = (String) object.get("winner");
+			calculateWinner();
 		    }
 		    if (new Date().after(startDatetime)) {
 			setRemainingItemsListView();
@@ -94,41 +92,33 @@ public class PlayHuntActivity extends Activity {
 	setupButtonCallbacks();
     }
 
-    // private void calculateWinner() {
-    // final ParseQuery<ParseObject> query = ParseQuery.getQuery("FoundItem");
-    // query.whereEqualTo("hunt", getHuntID());
-    // query.whereEqualTo("user", currentUsername);
-    // query.findInBackground(new FindCallback<ParseObject>() {
-    // public void done(final List<ParseObject> foundItemsList,
-    // ParseException e) {
-    // if (e == null) {
-    // foundItems = foundItemsList;
-    // currentScore = foundItems.size();
-    // String[] ItemsArray = new String[foundItemsList.size()];
-    // int i = 0;
-    //
-    // for (ParseObject foundItem : foundItemsList) {
-    // ItemsArray[i] = (String) foundItem.get("item");
-    // i++;
-    // }
-    // foundItemsArray = ItemsArray;
-    // addAllGameItems();
-    // showFoundItems();
-    // } else {
-    // Log.w("Parse Error", "player username retrieval failure");
-    // }
-    // }
-    // });
-    // }
+    private void calculateWinner() {
+	final ParseQuery<ParseObject> query = ParseQuery.getQuery("FoundItem");
+	query.whereEqualTo("hunt", getHuntID());
+	query.orderByDescending("currentScore");
+	query.addAscendingOrder("createdAt");
+	query.getFirstInBackground(new GetCallback<ParseObject>() {
+	    public void done(ParseObject object, ParseException e) {
+		final String user = object.getString("user");
+		System.out.println("Time up Winner? " + object.get("user"));
+		if (e == null) {
+		    setWinner(user);
+		    gameOverDialog(user);
+		} else {
+		    Log.w("Parse Error", "player username retrieval failure");
+		}
+	    }
 
-    // private void gameOverDialog(final String winner) {
-    // Bundle gameover = new Bundle();
-    // gameover.putString("winner", winner);
-    // final DialogFragment gameOverDialogFragment = new
-    // GameOverDialogFragment();
-    // gameOverDialogFragment.setArguments(gameover);
-    // gameOverDialogFragment.show(getFragmentManager(), "GameOver");
-    // }
+	});
+    }
+
+    private void gameOverDialog(final String winner) {
+	Bundle gameover = new Bundle();
+	gameover.putString("winner", winner);
+	final DialogFragment gameOverDialogFragment = new GameOverDialogFragment();
+	gameOverDialogFragment.setArguments(gameover);
+	gameOverDialogFragment.show(getFragmentManager(), "GameOver");
+    }
 
     private String getHuntID() {
 	String huntID = getIntent().getStringExtra("HuntID");
@@ -244,40 +234,32 @@ public class PlayHuntActivity extends Activity {
     }
 
     public void onFoundItemDialog(final String item) {
-	// final ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
-	// query.whereExists("winner");
-	// query.getInBackground(hunt.getObjectId(),
-	// new GetCallback<ParseObject>() {
-	// public void done(ParseObject thisHunt, ParseException e) {
-	// if (e == null) {
-	// if (thisHunt == null) {
-	incrementScore();
-	deleteListItem(item);
-	appendFoundItem(item);
-	saveFoundItem(item);
-	checkWin();
-	// } else {
-	// final String winner = thisHunt
-	// .getString("winner");
-	// // launchHasWinnerDialog(winner);
-	// }
-	// } else {
-	// Log.w("error", "game retrieval error");
-	// }
-	// }
-	//
-	// });
+	final ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
+	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
+	    public void done(ParseObject currentGame, ParseException e) {
+		if (e == null) {
+		    System.out.println("Winner? " + currentGame.get("winner"));
+		    if (currentGame.get("winner") == null) {
+			incrementScore();
+			deleteListItem(item);
+			appendFoundItem(item);
+			saveFoundItem(item);
+			checkWin();
+		    } else {
+			launchHasWinnerDialog();
+		    }
+		} else {
+		    Log.w("error", "game retrieval error");
+		}
+	    }
+
+	});
     }
 
-    // private void launchHasWinnerDialog(final String winner) {
-    // Bundle won = new Bundle();
-    // won.putString("winner", winner);
-    // final DialogFragment HasWinnerDialogFragment = new
-    // HasWinnerDialogFragment();
-    // HasWinnerDialogFragment.setArguments(won);
-    // HasWinnerDialogFragment.show(getFragmentManager(), "HasWinner");
-    //
-    // }
+    private void launchHasWinnerDialog() {
+	final DialogFragment HasWinnerDialogFragment = new HasWinnerDialogFragment();
+	HasWinnerDialogFragment.show(getFragmentManager(), "HasWinner");
+    }
 
     private void saveFoundItem(final String item) {
 	final ParseObject foundItem = new ParseObject("FoundItem");
@@ -334,12 +316,12 @@ public class PlayHuntActivity extends Activity {
 
     private void checkWin() {
 	if (currentScore == allItems.size()) {
-	    setWinner();
+	    setWinner(currentUsername);
 	}
     }
 
-    private void setWinner() {
-	hunt.put("winner", currentUser);
+    private void setWinner(String winner) {
+	hunt.put("winner", winner);
 	hunt.saveInBackground(new SaveCallback() {
 	    public void done(ParseException e) {
 		if (e == null) {
@@ -411,54 +393,6 @@ public class PlayHuntActivity extends Activity {
 	});
     }
 
-    // private void withdraw() {
-
-    // final List<String> playerToRemove = new ArrayList<String>();
-    // playerToRemove.add(currentUsername);
-    // ParseQuery<ParseObject> query = ParseQuery.getQuery("notification");
-    // query.whereEqualTo("invitedUser", currentUsername);
-    // // query.whereEqualTo("huntId", getHuntID());
-    // Log.i("scavenger Hunt", "notifications for " + currentUsername);
-    // query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
-    // public void done(final ParseObject notification, ParseException e) {
-    // if (e == null) {
-    // if (notification == null) {
-    // Log.d("Game",
-    // "The hunt had an invalid objectid and wasn't found");
-    // Toast.makeText(
-    // getApplicationContext(),
-    // " Sorry, There are no hunts available at this time! Try back later!!",
-    // Toast.LENGTH_LONG).show();
-    // finish();
-    // } else {
-    // notification.put("declined", true);
-    // notification.saveInBackground(new SaveCallback() {
-    // @Override
-    // public void done(com.parse.ParseException arg0) {
-    // if (arg0 == null) {
-    // Intent invtations = new Intent(
-    // PlayHuntActivity.this,
-    // InvitationsActivity.class);
-    // invtations.putExtra("HuntID", getHuntID());
-    // startActivity(invtations);
-    // } else {
-    // Log.i("ScavengerHuntActivity",
-    // "problem saving withdrawal " + arg0);
-    // Log.i("ScavengerHuntActivity",
-    // "not. objectid "
-    // + notification
-    // .getObjectId());
-    // }
-    // }
-    // });
-    // }
-    // }
-    // }
-    // });
-    //
-    // }
-    // }
-
     private void withdraw() {
 	final List<String> playerToRemove = new ArrayList<String>();
 	playerToRemove.add(currentUsername);
@@ -494,36 +428,3 @@ public class PlayHuntActivity extends Activity {
     }
 
 }
-
-// private void removeDeclined() {
-// final List<String> playerToRemove = new ArrayList<String>();
-// playerToRemove.add(currentUsername);
-// ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
-// query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
-// public void done(ParseObject hunt, com.parse.ParseException e) {
-// Log.i("scavenger Hunt", "in parse query" + hunt.getObjectId());
-// if (e == null) {
-// hunt.removeAll("huntPlayers", playerToRemove);
-// hunt.saveInBackground(new SaveCallback() {
-// public void done(com.parse.ParseException arg0) {
-// if (arg0 == null) {
-// Toast.makeText(
-// getApplicationContext(),
-// "You've been withdrawn from this hunt.",
-// Toast.LENGTH_LONG).show();
-// Intent i = new Intent(PlayHuntActivity.this,
-// PlayingHuntsActivity.class);
-// i.putExtra("UpdateHuntActivity", getHuntID());
-// startActivity(i);
-// Log.i("Decline", "Players Removed!");
-// } else {
-// Log.i("Decline", "Error removing players "
-// + arg0);
-// }
-// }
-// });
-// }
-// }
-// });
-//
-// }

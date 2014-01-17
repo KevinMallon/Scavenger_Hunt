@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -33,8 +34,6 @@ public class PlayingHuntsActivity extends Activity {
     ArrayList<String> titles = new ArrayList<String>();
     ArrayList<String> IDs = new ArrayList<String>();
 
-    // ArrayList<String> beginDates = new ArrayList<String>();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
@@ -45,7 +44,6 @@ public class PlayingHuntsActivity extends Activity {
     private void getDeclinedHunts() {
 	ParseQuery<ParseObject> declinedQuery = ParseQuery.getQuery("Declined");
 	declinedQuery.whereEqualTo("userName", currentUsername);
-	// declinedQuery.selectKeys(Arrays.asList("hunt"));
 	declinedQuery.findInBackground(new FindCallback<ParseObject>() {
 	    @Override
 	    public void done(List<ParseObject> declinedHuntsListObject,
@@ -86,12 +84,11 @@ public class PlayingHuntsActivity extends Activity {
 				    .getDate("start_datetime");
 			    final Date endDatetime = obj
 				    .getDate("end_datetime");
-			    if (new Date().before(endDatetime)
-				    && obj.getParseUser("winner") == null) {
+			    // if (new Date().before(endDatetime)) {
 
-				titles.add((String) obj.get("title"));
-				IDs.add(obj.getObjectId());
-			    }
+			    titles.add((String) obj.get("title"));
+			    IDs.add(obj.getObjectId());
+			    // }
 			}
 		    }
 
@@ -126,38 +123,20 @@ public class PlayingHuntsActivity extends Activity {
 	    }
 	});
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.menuitem_prefs:
+	    return true;
+	case R.id.menuitem_logout:
+	    ParseUser.logOut();
+	    finish();
+	    return true;
+	default:
+	    break;
+	}
+	return false;
+    }
+
 }
-
-// private void removeDeclined() {
-// final List<String> playerToRemove = new ArrayList<String>();
-// playerToRemove.add(currentUsername);
-// ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
-// query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
-// public void done(ParseObject hunt, com.parse.ParseException e) {
-// Log.i("scavenger Hunt", "in parse query" + hunt.getObjectId());
-// if (e == null) {
-// hunt.removeAll("huntPlayers", playerToRemove);
-// hunt.saveInBackground(new SaveCallback() {
-// public void done(com.parse.ParseException arg0) {
-// if (arg0 == null) {
-// Toast.makeText(
-// getApplicationContext(),
-// "You've been withdrawn from this hunt.",
-// Toast.LENGTH_LONG).show();
-// Intent i = new Intent(PlayHuntActivity.this,
-// PlayingHuntsActivity.class);
-// i.putExtra("UpdateHuntActivity", getHuntID());
-// startActivity(i);
-// Log.i("Decline", "Players Removed!");
-// } else {
-// Log.i("Decline", "Error removing players "
-// + arg0);
-// }
-// }
-// });
-// }
-// }
-// });
-//
-// }
-

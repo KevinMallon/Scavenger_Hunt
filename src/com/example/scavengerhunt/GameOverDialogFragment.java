@@ -19,7 +19,7 @@ public class GameOverDialogFragment extends DialogFragment {
 			new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int id) {
 				Intent intent = new Intent(getActivity(),
-					InvitationsActivity.class);
+					PlayingHuntsActivity.class);
 				startActivity(intent);
 			    }
 			});

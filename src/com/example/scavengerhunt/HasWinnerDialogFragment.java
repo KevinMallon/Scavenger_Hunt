@@ -11,10 +11,9 @@ public class HasWinnerDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-	final String winner = getArguments().getString("winner");
+	// final String winner = getArguments().getString("winner");
 	AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	builder.setMessage(
-		"Time has run out. " + winner + " has won this hunt!")
+	builder.setMessage("Sorry, another player has already won this hunt.")
 		.setPositiveButton("Hunt List",
 			new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int id) {
