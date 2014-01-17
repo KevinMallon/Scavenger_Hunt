@@ -165,17 +165,30 @@ public class PlayersActivity extends Activity implements OnClickListener {
 	    final ArrayList<String> selectedPlayers) {
 
 	for (String huntPlayer : selectedPlayers) {
-	    ParseQuery<ParseInstallation> pushQuery = ParseInstallation
-		    .getQuery();
-	    pushQuery.whereEqualTo("owner", huntPlayer);
-
+	    ParseInstallation installation = ParseInstallation
+		    .getCurrentInstallation();
+	    installation.put("username", huntPlayer);
+	    installation.saveInBackground();
+	    ParsePush parsePush = new ParsePush();
+	    ParseQuery pQuery = ParseInstallation.getQuery();
+	    pQuery.whereEqualTo("username", huntPlayer);
+	    parsePush.sendMessageInBackground(
+		    currentUser.getString("username")
+			    + " has invited you to join scavenger hunt, "
+			    + hunt.getString("title") + "!", pQuery);
 	    Log.d("push player", huntPlayer);
-	    ParsePush push = new ParsePush();
-	    push.setQuery(pushQuery);
-	    push.setMessage(currentUser.getString("username")
-		    + " has invited you to join scavenger hunt, "
-		    + hunt.getString("title") + "!");
-	    push.sendInBackground();
+
+	    // ParseQuery<ParseInstallation> pushQuery = ParseInstallation
+	    // .getQuery();
+	    // pushQuery.whereEqualTo("owner", huntPlayer);
+	    //
+	    // Log.d("push player", huntPlayer);
+	    // ParsePush push = new ParsePush();
+	    // push.setQuery(pushQuery);
+	    // push.setMessage(currentUser.getString("username")
+	    // + " has invited you to join scavenger hunt, "
+	    // + hunt.getString("title") + "!");
+	    // push.sendInBackground();
 
 	    final ParseObject notification = new ParseObject("notification");
 	    notification.put("huntId", getHuntID());

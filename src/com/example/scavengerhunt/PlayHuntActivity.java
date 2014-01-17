@@ -9,7 +9,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -76,6 +75,7 @@ public class PlayHuntActivity extends Activity {
 		    if (new Date().after(endDatetime)) {
 			calculateWinner();
 		    }
+
 		    if (new Date().after(startDatetime)) {
 			setRemainingItemsListView();
 		    } else {
@@ -227,7 +227,6 @@ public class PlayHuntActivity extends Activity {
 	declineButton.setOnClickListener(new View.OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		// withdraw();
 		saveDecliner();
 	    }
 	});
@@ -238,7 +237,6 @@ public class PlayHuntActivity extends Activity {
 	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
 	    public void done(ParseObject currentGame, ParseException e) {
 		if (e == null) {
-		    System.out.println("Winner? " + currentGame.get("winner"));
 		    if (currentGame.get("winner") == null) {
 			incrementScore();
 			deleteListItem(item);
@@ -334,44 +332,22 @@ public class PlayHuntActivity extends Activity {
 	    }
 	});
 	sendWinnerNotification();
+	Toast.makeText(getApplicationContext(),
+		"Congratulations, you have won!", Toast.LENGTH_SHORT).show();
     }
 
     private void sendWinnerNotification() {
 	for (final String player : players) {
 	    final ParseQuery<ParseInstallation> pushQuery = ParseInstallation
 		    .getQuery();
-	    pushQuery.whereEqualTo("owner", player);
+	    pushQuery.whereEqualTo("username", player);
 
 	    final ParsePush push = new ParsePush();
 	    push.setQuery(pushQuery);
 	    push.setMessage(currentUsername + " has won the "
-		    + hunt.getString("huntTitle") + " scavenger hunt!");
+		    + hunt.getString("title") + " scavenger hunt!");
 	    push.sendInBackground();
 	}
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-	MenuInflater inflater = getMenuInflater();
-	inflater.inflate(R.menu.mainmenu, menu);
-	return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-	switch (item.getItemId()) {
-	case R.id.menuitem_prefs:
-	    // Intent i = new Intent(mThisActivity, PrefsActivity.class);
-	    // mThisActivity.startActivity(i);
-	    return true;
-	case R.id.menuitem_logout:
-	    ParseUser.logOut();
-	    finish();
-	    return true;
-	default:
-	    break;
-	}
-	return false;
     }
 
     private void saveDecliner() {
@@ -393,38 +369,26 @@ public class PlayHuntActivity extends Activity {
 	});
     }
 
-    private void withdraw() {
-	final List<String> playerToRemove = new ArrayList<String>();
-	playerToRemove.add(currentUsername);
-	ParseQuery<ParseObject> query = ParseQuery.getQuery("Hunt");
-	query.selectKeys(Arrays.asList("huntPlayers"));
-	query.getInBackground(getHuntID(), new GetCallback<ParseObject>() {
-	    public void done(ParseObject hunt, com.parse.ParseException e) {
-		Log.i("scavenger Hunt", "in parse query" + hunt.getObjectId());
-		if (e == null) {
-		    hunt.removeAll("huntPlayers", playerToRemove);
-		    hunt.saveInBackground(new SaveCallback() {
-			public void done(com.parse.ParseException arg0) {
-			    if (arg0 == null) {
-				Toast.makeText(
-					getApplicationContext(),
-					"You've been withdrawn from this hunt.",
-					Toast.LENGTH_LONG).show();
-				Intent i = new Intent(PlayHuntActivity.this,
-					PlayingHuntsActivity.class);
-				i.putExtra("UpdateHuntActivity", getHuntID());
-				startActivity(i);
-				Log.i("Decline", "Players Removed!");
-			    } else {
-				Log.i("Decline", "Error removing players "
-					+ arg0);
-			    }
-			}
-		    });
-		}
-	    }
-	});
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+	MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.mainmenu, menu);
+	return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.menuitem_prefs:
+	    return true;
+	case R.id.menuitem_logout:
+	    ParseUser.logOut();
+	    finish();
+	    return true;
+	default:
+	    break;
+	}
+	return false;
     }
 
 }
